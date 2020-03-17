@@ -1,0 +1,37 @@
+{
+  "name": "tictapper-koni",
+  "version": "1.0.0",
+  "description": "Node RPI tictapper koni CPU",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "TicTAP",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "clear": "^0.1.0",
+    "delay": "^4.1.0",
+    "http": "0.0.0",
+    "jpeg-js": "^0.3.4",
+    "jsqr": "^1.1.1",
+    "linux-input-device": "^2.0.0",
+    "lodash": "^4.17.11",
+    "mysql": "^2.16.0",
+    "onoff": "^3.2.2",
+    "pi-servo": "^1.0.2",
+    "promise-all-settled": "^1.1.0",
+    "promise-events": "^0.1.4",
+    "python-shell": "^1.0.7",
+    "q": "^1.5.1",
+    "readline-sync": "^1.4.9",
+    "replaceall": "^0.1.6",
+    "request": "^2.88.0",
+    "serialport": "^7.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://jordibreda@bitbucket.org/bretenbits/tictapper-koni.git"
+  },
+  "homepage": "https://bitbucket.org/bretenbits/tictapper-koni#readme"
+}
