@@ -4,23 +4,23 @@ Api module to work with the database
 
 var Q=require("q");
 var mysql = require('mysql');
-var setup=require('./setup');
+var setup=require('./setup'); //Has the coonection info for the database and the arduino
 const chalk = require('chalk');
 
-var sql={
-};
+var sql={};
 
+sql.js
 sql.connectSql=function () {
 	var deferred=Q.defer();
 	sql.db=mysql.createConnection(setup.sql);
 	sql.db.connect((err) => {
 		if (err) {
-			throw err;		
+			throw err;
 		}
-		console.log(chalk.green('Connected to database '+setup.sql.database));	
-		deferred.resolve("connected");	
+		console.log(chalk.green('Connected to database '+setup.sql.database));
+		deferred.resolve("connected");
 	});
-	return deferred.promise;	
+	return deferred.promise;
 }
 
 
@@ -33,11 +33,11 @@ sql.getActiveJob=function () {
 			else 	deferred.resolve(results[0]);
 		})
 	}else{
-		deferred.reject("No database connection available");	
+		deferred.reject("No database connection available");
 	}
 	return deferred.promise;
 }
-	
+
 sql.putActiveJob=function (job) {
 	var deferred=Q.defer();
 	if (sql.db){
@@ -47,10 +47,10 @@ sql.putActiveJob=function (job) {
 			else 	deferred.resolve(results);
 		})
 	}else{
-		deferred.reject("No database connection available");	
+		deferred.reject("No database connection available");
 	}
 	return deferred.promise;
-}
+};
 
 sql.insertTag=function (tag) {
 	var deferred=Q.defer();
@@ -61,7 +61,7 @@ sql.insertTag=function (tag) {
 			else 	deferred.resolve(results);
 		})
 	}else{
-		deferred.reject("No database connection available");	
+		deferred.reject("No database connection available");
 	}
 	return deferred.promise;
 }

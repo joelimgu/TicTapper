@@ -25,9 +25,9 @@ function apiQRGun(){
 	sv1.open();
 
 	var sv1b=sv1;
-	
+
 	this.input=new LinuxInputListener(setup.keyboard_id);
-	this.eventEmitter = new events.EventEmitter();	
+	this.eventEmitter = new events.EventEmitter();
 	var emitter=this.eventEmitter;
 
 	this.input.on('open', () => this.input.query('EV_SW', SW_LID));
@@ -43,23 +43,22 @@ function apiQRGun(){
 		    	//console.log(apiQRGun.mapIt(sample));
 		    	var waitTill = new Date(new Date().getTime() + 250);	//Esperem 250 ms abans de tornar a 10 graus (és possible que el servo encara estigui en moviment anterior, anant cap a 60 degrees)
 				while(waitTill > new Date()){};
-		    	apiQRGun.setServoInit(); 
+		    	apiQRGun.setServoInit();
 		    	//var waitTill = new Date(new Date().getTime() + 500);
 				//while(waitTill > new Date()){};
 		    	emitter.emit('data',apiQRGun.mapIt(sample));
 		    	sample = [];
 		    }
-		}
+			};
 	});
-
-}
+};
 
 apiQRGun.setServoInit=async function(){
 	sv1.setDegree(10);
-}
+};
 
 apiQRGun.prototype.getUrl=function(){
-	var deferred=Q.defer();	
+	var deferred=Q.defer();
 	var emitter=this.eventEmitter;
 	//var sv1= this.sv1;
 	emitter.on('data',function(d){
@@ -67,7 +66,7 @@ apiQRGun.prototype.getUrl=function(){
 		emitter.removeAllListeners('data');
 		console.log("\t"+chalk.yellow("-> ["+Date.now()+"] "+d.replace(/(\r\n|\n|\r)/gm,"")));
 		//sv1.setDegree(10);
-		deferred.resolve(d);	
+		deferred.resolve(d);
 	});
 	sv1.setDegree(60);
 
