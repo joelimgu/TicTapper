@@ -7,7 +7,7 @@ const chalk = require('chalk');             //color terminal
 
 
 
-class database {                             //class to create a db to CRUD
+class Database {                             //class to create a db to CRUD
   constructor(db, jobsTable, tagsTable){
     this.jobsTable = jobsTable;
     this.tagsTable = tagsTable;
@@ -43,8 +43,8 @@ class database {                             //class to create a db to CRUD
     let deferred = Q.defer();
     if (obj.length == 0){                                  //looks if the array is empty
       throw "An empty array was passed ";
-    }else{                                                 // If its not delets the items in it
-      for(var i=0;i < obj.length;i++){
+    }else {                                                 // If its not delets the items in it
+      for(let i=0;i < obj.length;i++){
         let query = "DELETE FROM koni."+table+" WHERE id= "+obj[i].id; //generates de SQL querry to delete the items one by one taking the primary key(id) to identify them
         this.runQuery(query).then((msg) => {deferred.resolve})        //runs the querry using the run querry function in the same class witch is a promise also
                             .catch((err) => {throw(err)})

@@ -14,17 +14,17 @@ var digestLog=require("./digestLog.js");
 //Constructor method
 function arduino(setup){
 	this.setup=setup;
-	this.port = new SerialPort(setup.port, { baudRate: setup.bauds, autoOpen: false } );
+	this.port = new SerialPort(setup.port, { baudRate: setup.bauds, autoOpen: false } );//Sets the port and bitrate of the connection to the arduino
 	//parser = this.port.pipe(new Readline({ delimiter: '\n' }));
-	parser = this.port.pipe(new Readline({ delimiter: '*****\r' }));
+	parser = this.port.pipe(new Readline({ delimiter: '*****\r' })); //I don't know what this does?????
 
 	this.eventEmitter = new events.EventEmitter();
-	var emitter=this.eventEmitter;
+	var emitter = this.eventEmitter;
 	//Create a listener each time arduino sends a string with \n as End of string
 	parser.on('data', function(d){
    		emitter.emit('data',d);
 	});
-};
+}
 
 //Open port, and wait until arduino respond to connection
 arduino.prototype.openPort=function () {
