@@ -9,6 +9,7 @@ const chalk = require('chalk');             //color terminal
 
 class Database {                             //class to create a db to CRUD
   constructor(db, jobsTable, tagsTable){
+    this.db = db; //only for info porpuses, never really used
     this.jobsTable = jobsTable;
     this.tagsTable = tagsTable;
   };
@@ -30,7 +31,7 @@ class Database {                             //class to create a db to CRUD
     let deferred = Q.defer();
     this.connectedDB = mysql.createConnection(info);  //creates the connection using the info
     this.connectedDB.connect(function(err) {              //actualy connects to the db
-      if (err) { throw err;}
+      if (err) { throw err;};
       console.log(chalk.green("Connected!"));              //info to the "user"
       deferred.resolve("Connected");                       //resolves the promise if thers no errors
     });
@@ -65,6 +66,7 @@ class Database {                             //class to create a db to CRUD
     console.log(chalk.green("from table" + table +" updated column" + column + " to : " + newValue)); // gives the info to the "user"
     return deferred.promise;
   };
+
 
   getActiveJob() {                              //finds an active job thats in the jobs table
     let deferred = Q.defer()
@@ -113,5 +115,6 @@ class Database {                             //class to create a db to CRUD
   };
 };
 
+
 //exports the class to be used in other parts of the program
-module.exports = database;
+module.exports = Database;

@@ -9,10 +9,10 @@
 PN532_SPI pn532spi(SPI, 10);               //SPI port digital 10
 NfcAdapter nfc = NfcAdapter(pn532spi);     //Setup nfc drivers
 
-#define BAUDRATE 19200 //9600 
+#define BAUDRATE 19200 //9600
 
 //PINOUT
-const byte StepperXPulse=5;     //D5 -> Linear movement Stepper pulse 
+const byte StepperXPulse=5;     //D5 -> Linear movement Stepper pulse
 const byte StepperXDir=3;       //D3 -> Direction of linear movement
 const byte StepperEnable=4;     //D4 -> Enable Steppers
 const byte ldr=2;               //D2 -> LDR (Interruption)
@@ -25,7 +25,7 @@ AccelStepper stepper(1,StepperXPulse,StepperXDir);
 String tagId="";               //Variable for TAG NFC ID value
 String command;                //Variable to receive RPI3 order
 String tagNdefUri="";          //Variable to store the URL for TAG writing
-String response="";            //Variable to store the response to RPI       
+String response="";            //Variable to store the response to RPI
 int romIt=0;                   //Variable to determine to ROM or not to ROM: 1 -> ROM  0-> NO ROM
 unsigned long timeToDetect;    //Variable to store the time it took to detect TAG
 unsigned long timeToIdentify;  //Variable to store the time it took to read TAG id
@@ -42,8 +42,8 @@ unsigned long lastInterrupt;
 void readSerialString() {
     while(Serial.available() == 0){}       //Wait till a serial data is available
     if(Serial.available()) {               //If serial port is available
-      command=Serial.readString();  
-    }  
+      command=Serial.readString();
+    }
 }
 
 String getValue(String data, char separator, int index)
@@ -72,7 +72,7 @@ void readTagId() {
   int counter=0;
   int timeout=0;
   while ((!nfc.tagPresent())&&(timeout!=0)) {
-    delay(10);  
+    delay(10);
     counter=counter+1;
     if (counter>200){
       timeout=1;
@@ -82,7 +82,7 @@ void readTagId() {
   timeToDetect = endDetect - start;
   if (timeout==0){
     NfcTag tag = nfc.read();
-    tagId=tag.getUidString();  
+    tagId=tag.getUidString();
   }else{
     tagId="error";
   }
@@ -127,7 +127,7 @@ void setup() {
   // put your setup code here, to run once:
   nfc.begin();                            //Start NFC as SPI mode
   delay(250);
-  
+
   pinMode(ldrPow, OUTPUT);
   digitalWrite(ldrPow, HIGH);         //Power up LDR module
   pinMode(StepperEnable, OUTPUT);
@@ -150,11 +150,11 @@ void setup() {
   Serial.begin(BAUDRATE);                 //Set the speed of the communication with RPI3
   while (!Serial) { }                     // wait for serial port to connect. Needed for native USB
   Serial.flush();
-  Serial.println("Arduino:nfc:Ready:*****"); 
-  
+  Serial.println("Arduino:nfc:Ready:*****");
+
 }
 
-void LDR_ISR(){ 
+void LDR_ISR(){
   //if (millis() - lastInterrupt > 5){  //Avoid double bounce
     //Serial.println("LDR changed");
     if (digitalRead(ldr)==HIGH){
@@ -172,7 +172,7 @@ void loop() {
   //Serial.println("loop");
   readSerialString();
   //Serial.println(command);
-/*  
+/*
   if ((command=="init")){           //init role => Put first in pre-position (tapant ldr abans d'entrar)
     stepper.moveTo(100000);       //Put timeout steps
     while(ldr_val){               //While ldr receives light, keep moving
@@ -183,7 +183,7 @@ void loop() {
   }
 */
 
-  if (command.indexOf('https')>=0){        //Write the tag
+  if (command.indexOf("https")>=0){        //Write the tag
     timeToDetect=0;
     timeToIdentify=0;
     timeToRead=0;
@@ -197,11 +197,11 @@ void loop() {
       endOfWrite = millis();
       if (checkTagUri()){                     //Check if the written URL is correct
         if (romIt==1){                          //ROM it or not:
-          romTag();                           
+          romTag();
           response=response+"RO**";               //Prepare response string RO => Read Only => SUCCESS AND ROMED
         }else{
-          response=response+"R**";                //Prepare response string R => Read => SUCCESS AND NO ROMED           
-        }       
+          response=response+"R**";                //Prepare response string R => Read => SUCCESS AND NO ROMED
+        }
       }else{
         response=response+"RE**";                 //Prepare response string RE => Read Error
       }
@@ -218,7 +218,7 @@ void loop() {
     Serial.println(response+"***");
   }
 
-  if (command=="S"){           //Set Sticker on position 
+  if (command=="S"){           //Set Sticker on position
     stepper.moveTo(100000);       //Put timeout steps
     bool aux_ldr=ldr_val;
     if (aux_ldr){ //In normal operation
@@ -228,12 +228,12 @@ void loop() {
       while(!ldr_val){               //Run till sticker passed
         stepper.run();              //Step it
       }
-      stepper.stop();               //Stop stepper    
+      stepper.stop();               //Stop stepper
     }else{      //After init
       while(!ldr_val){               //Run till sticker passed
         stepper.run();              //Step it
       }
-      stepper.stop();               //Stop stepper  
+      stepper.stop();               //Stop stepper
     }
     Serial.println("SOK*****");
   }
@@ -247,9 +247,14 @@ void loop() {
     Serial.println("RKO*****");  //Rom disabled
   }
 
-  
-  
-  
+
+
+
   //stepper.runToNewPosition(8000);
   //stepper.runToNewPosition(0);
 }
+
+
+//https://www.youtube.com/watch?v=u6Q1UjWmFeY&feature=youtu.be
+//https://blog.naver.com/PostView.nhn?blogId=ubicomputing&logNo=220643174034&widgetTypeCall=true
+//https://elty.pl/en_US/p/RFIDNFC-Shield-NXP-PN532/437

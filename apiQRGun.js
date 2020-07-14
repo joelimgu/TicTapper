@@ -25,10 +25,10 @@ function apiQRGun(){
 	sv1.open();
 
 	var sv1b=sv1;
-	
-	this.input=new LinuxInputListener(setup.keyboard_id);
-	this.eventEmitter = new events.EventEmitter();	
-	var emitter=this.eventEmitter;
+
+	this.input = new LinuxInputListener(setup.keyboard_id);//creates an event whan recives data from setup.keyboard_id
+	this.eventEmitter = new events.EventEmitter();
+	var emitter = this.eventEmitter;
 
 	this.input.on('open', () => this.input.query('EV_SW', SW_LID));
 
@@ -42,24 +42,25 @@ function apiQRGun(){
 		    }else{
 		    	//console.log(apiQRGun.mapIt(sample));
 		    	var waitTill = new Date(new Date().getTime() + 250);	//Esperem 250 ms abans de tornar a 10 graus (és possible que el servo encara estigui en moviment anterior, anant cap a 60 degrees)
-				while(waitTill > new Date()){};
-		    	apiQRGun.setServoInit(); 
+					while(waitTill > new Date()){};
+		    	apiQRGun.setServoInit();
 		    	//var waitTill = new Date(new Date().getTime() + 500);
-				//while(waitTill > new Date()){};
-		    	emitter.emit('data',apiQRGun.mapIt(sample));
+					//while(waitTill > new Date()){};
+		    	emitter.emit('data', apiQRGun.mapIt(sample));
 		    	sample = [];
-		    }
-		}
+		    };
+		};
 	});
+};
 
-}
 
 apiQRGun.setServoInit=async function(){
 	sv1.setDegree(10);
-}
+};
 
+//estaria be saber que fa aixo
 apiQRGun.prototype.getUrl=function(){
-	var deferred=Q.defer();	
+	var deferred=Q.defer();
 	var emitter=this.eventEmitter;
 	//var sv1= this.sv1;
 	emitter.on('data',function(d){
@@ -67,30 +68,32 @@ apiQRGun.prototype.getUrl=function(){
 		emitter.removeAllListeners('data');
 		console.log("\t"+chalk.yellow("-> ["+Date.now()+"] "+d.replace(/(\r\n|\n|\r)/gm,"")));
 		//sv1.setDegree(10);
-		deferred.resolve(d);	
+		deferred.resolve(d);
 	});
 	sv1.setDegree(60);
 
 	return deferred.promise;
 };
 
+
+//suposo que transforms la url "dolenta" de la pistola QR en la bona transformant els caracters falsos
 apiQRGun.mapIt=function(val){
-	mayus=false;
+	mayus = false;
 	str='';
 	val.forEach(function(elem){
-		if (elem==42){
-			mayus=true;
+		if (elem == 42){
+			mayus = true;
 		}else{
 			if (mayus){
-				str=str+codes[elem].toUpperCase();
+				str = str+codes[elem].toUpperCase();
 			}else{
-				str=str+codes[elem];
+				str = str+codes[elem];
 			}
-			mayus=false;
-		}
+			mayus = false;
+		};
 	});
 	return str;
-}
+};
 
 //Export module
-module.exports=apiQRGun;
+module.exports = apiQRGun;

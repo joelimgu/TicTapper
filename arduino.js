@@ -20,11 +20,12 @@ function arduino(setup){
 
 	this.eventEmitter = new events.EventEmitter();
 	var emitter = this.eventEmitter;
+
 	//Create a listener each time arduino sends a string with \n as End of string
 	parser.on('data', function(d){
    		emitter.emit('data',d);
 	});
-}
+};
 
 //Open port, and wait until arduino respond to connection
 arduino.prototype.openPort=function () {
@@ -47,13 +48,13 @@ arduino.prototype.openPort=function () {
 //Write to arduino and wait untill response
 arduino.prototype.writePort=function (str) {
 	var deferred=Q.defer();
-	var emitter=this.eventEmitter;
-	emitter.on('data',function(d){
+	let emitter=this.eventEmitter;
+	emitter.on('data',function(data){
 		//console.log("EVENT EMITTER RECEIVED:",d);
-		console.log("\t"+chalk.yellow("-> ["+Date.now()+"] "+digestLog.nfcLog(d.replace(/(\r\n|\n|\r)/gm,""))));	//digestLog.nfcRom(
+		console.log("\t"+chalk.yellow("-> ["+Date.now()+"] "+digestLog.nfcLog(data.replace(/(\r\n|\n|\r)/gm,""))));	//digestLog.nfcRom(
 		//console.log("\t"+chalk.yellow("-> "+d.replace(/(\r\n|\n|\r)/gm,"")));	//digestLog.nfc(
 		emitter.removeAllListeners('data');
-		deferred.resolve(d);
+		deferred.resolve(data);
 	});
 	this.port.write(str);
 	return deferred.promise;

@@ -45,7 +45,7 @@ apiTictapper.mainLoop=async function(){
 			console.log(chalk.green("Found active job:"+job.ref+" "+job.name+" "+job.qtydone+"/"+job.qty));
 			console.log(chalk.green("Initialize TicTAP-KONI"));
 			var rom="D"; //Don not rom stickers for this job
-			if (job.rom==1)		rom="C"; //Rom stickers for this job
+			if (job.rom == 1)		rom="C"; //Rom stickers for this job
 			var r = await apiDevice.nfcSetRom(rom);//sends the command to the arduino to rom or not the sticker
 			//Set first sticker on position:
 			//var r=await apiDevice.nfcWrite("S");
@@ -88,6 +88,7 @@ apiTictapper.mainLoop=async function(){
 					if (actualjob.qtydone == actualjob.qty){
 						actualjob.status = "stop";
 					};
+							//estaria be saber que significa cada un d'aquests num...:
 							//22aaee3344ff**RO**122**211**432**223
 					var tagObj={
 						job_id: actualjob.id,

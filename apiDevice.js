@@ -12,26 +12,26 @@ var apiDevice={
 	//feed: new arduino(setup.arduino_feed)
 };
 
-//method to open connection to serial ports 
+//method to open connection to serial ports
 apiDevice.connectDevices=function(){
 	var deferred=Q.defer();
-	var response=[];	
+	var response=[];
 	promises=[apiDevice.nfc.openPort()];
 	Q.allSettled(promises)
 	.then(function (results) {
 	    results.forEach(function (result) {
 	    	response.push(result);
 	    });
-	    deferred.resolve(response);	
+	    deferred.resolve(response);
 	});
-	return deferred.promise;	
+	return deferred.promise;
 }
 
 /* NFC device */
 //method to setup nfc device to rom or not the registered stickers
 apiDevice.nfcSetRom=function (val) {	//val=C ROM, val=D No ROM
 	var deferred=Q.defer();
-	apiDevice.nfc.writePort(val).then(function(result){		
+	apiDevice.nfc.writePort(val).then(function(result){
 		deferred.resolve(result);
 	});
 	return deferred.promise;
