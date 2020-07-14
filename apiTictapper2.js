@@ -73,36 +73,34 @@ async function insertTagToDB(job, start, nfcWr, url){
 };
 
 
-
 apiTictapper.mainLoop = async function(){
 	var deferred=Q.defer();
 	//console.log(chalk.green("\nAwaiting serial..."));
 	while(true){	//En principi no ha de sortir mai d'aquí
 
 		var job = await apiSql.getActiveJob();	//1- Check Job
-		if (!_.isEmpty(job)){
+		if (!_.isEmpty(job)){                   //if thers a job:
 			console.log(chalk.green("Found active job:"+job.ref+" "+job.name+" "+job.qtydone+"/"+job.qty));
-			console.log(chalk.green("Initialize TicTAP-KONI"));
-			var rom="D"; //Don not rom stickers for this job
-			if (job.rom == 1)		rom="C"; //Rom stickers for this job
+
+      var rom = "D"; //Don not rom stickers for this job
+			if (job.rom == 1)		rom = "C"; //Rom stickers for this job
 			var r = await apiDevice.nfcSetRom(rom);
 			//Set first sticker on position:
 			//var r=await apiDevice.nfcWrite("S");
 			console.log(chalk.green("First sticker in pre-position"));
 
-			while (job.qtydone<job.qty){
+			while (job.qtydone < job.qty){
 				var actualjob = await apiSql.getActiveJob();// should be able to delete but its here for now
-				var start = Date.now();
-				console.log(chalk.cyan("\tProcessing sticker "+(actualjob.qtydone+1)+"/"+actualjob.qty));
+				var start = Date.now();   //stores the start time to know how much it took later
+				console.log(chalk.cyan("\tProcessing sticker "+(actualjob.qtydone+1)+"/"+actualjob.qty)); //infos the user of the progress made
 
-				var url = await apiTictapper.qrGun.getUrl();
+				var url = await apiTictapper.qrGun.getUrl();  //gets the url
 
-				var nfcWr = await apiDevice.nfcWrite(url);
+				var nfcWr = await apiDevice.nfcWrite(url);  //writes the url
 
 				if ((nfcWr.indexOf("error")<0)&&(nfcWr.indexOf("Error"))<0){
-
           try {
-            await insertTag(job, start, nfcWr, url);
+            await insertTag(job, start, nfcWr, url);  //stores the tag in the db
           }catch(err){
               console.log(chalk..red("An error has occured : " + err));
           };
@@ -116,7 +114,7 @@ apiTictapper.mainLoop = async function(){
             try {
               await insertTag(job, start, nfcWr, url);
             }catch(err){
-                console.log(chalk..red("An error has occured : " + err));
+                console.log(chalk..red("An error has occured : " + err)); //stores the tag done in db
             };
 					}else{
 						//apiGpio.buzzer();
