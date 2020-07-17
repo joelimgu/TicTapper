@@ -17,7 +17,7 @@ const initialize = async function(){
   let deferred = Q.defer();
   database = await new Database(setup.sql.database, "jobs", "tags");
 
-  await Promse.all([apiDevice.connectDevices(), database.connect(setup.sql)]).then((msg) => {
+  await Promsie.all([apiDevice.connectDevices(), database.connect(setup.sql)]).then((msg) => {
     console.log(chalk.green("->" + msg[0]));
     console.log(chalk.green("-> Database " + msg[1]));
     deferred.resolve();
