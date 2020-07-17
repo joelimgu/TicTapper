@@ -1,5 +1,4 @@
-var Q=require("q");
-const delay = require('delay');
+var Q = require("q");
 var apiTictapper = require('./apiTictapper');
 
 async function main(){
@@ -7,7 +6,7 @@ async function main(){
 	await apiTictapper.initialize();
 
 	/* CHECK QUE TOT ESTÀ OK */
-	
+
 	await apiTictapper.mainLoop();
 
 	console.log("Program exiting. Good Bye!");

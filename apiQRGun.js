@@ -2,6 +2,16 @@
 API to deal with QR Gun
 */
 
+/*++++++++++++++++++++++++++++++++++++++++++ DOC +++++++++++++++++++++++++++++++++++++++++++++++++++
+	This object has basicly one usefull method, the getUrl(), it returns the URL thet the QR gun reads,
+	To accomplish this it waits to recieve sth from the QR gun (you should read the port by gound to
+	"/dev/input/by-id" and disconnecting everything minus the QR gun and save the path of the remaining
+	file on the setup.js file in keyboard id wich represents the QR gun id(WIP should be changed I know)
+	When it recieves data, it transforms the "broken" charackets as the gun gets some of them wrong into
+	the good charackters, but it can not diferencieta between the '-' and the idk(I should ask jordi) and
+	 then returns the good URL)
+*/
+
 var Q = require("q");
 var LinuxInputListener = require('linux-input-device');
 var setup = require('./setup');

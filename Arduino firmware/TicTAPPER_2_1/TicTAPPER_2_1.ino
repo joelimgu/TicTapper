@@ -76,7 +76,7 @@ void writeURLToTag(){ //function called when a URL is passed through the USB to 
 
 /************************************* NFC METHODS ******************************/
 void readNFCTagId(){
-  
+
 }
 /*
 void waitUntilTagIsDetected(){
@@ -105,13 +105,13 @@ void readTagId() {
       timeout = 1;
     }
   }
-  
+
   endDetect = millis();
   timeToDetect = endDetect - start;
   if (timeout == 0){
     NfcTag tag = nfc.read();
     tagId = tag.getUidString();
-  }else{ 
+  }else{
     tagId = "error";
   }
   endIdentify = millis();
@@ -154,7 +154,7 @@ void romTag() {
 
 void writeURL(){
     timeToDetect = 0;
-    timeToIdentify = 0; 
+    timeToIdentify = 0;
     timeToRead = 0;
     timeToWrite = 0;
     response = "";
@@ -167,16 +167,16 @@ void writeURL(){
       if (checkTagUri()){                     //Check if the written URL is correct
         if (romIt == 1){                          //ROM it or not:
           romTag();
-          response=response + "RO**";               //Prepare response string RO => Read Only => SUCCESS AND ROMED
+          response = response + "RO**";               //Prepare response string RO => Read Only => SUCCESS AND ROMED
         }else{
-          response=response + "R**";                //Prepare response string R => Read => SUCCESS AND NO ROMED
+          response = response + "R**";                //Prepare response string R => Read => SUCCESS AND NO ROMED
         }
       }else{
-        response=response + "RE**";                 //Prepare response string RE => Read Error
+        response = response + "RE**";                 //Prepare response string RE => Read Error
       }
     }else{
       endOfWrite = millis();
-      response=response + "WE**";                 //Prepare response string WE => Write Error
+      response = response + "WE**";                 //Prepare response string WE => Write Error
     }
     timeToWrite = endOfWrite - start;
     /* TODO: ADD timing params: Time to identify, Time to Write, Time to Read, Try to get more info about the chip */
@@ -199,21 +199,21 @@ void setup(){
 };
 
 void loop(){
- command="";
+ command = "";
  readSerialString();
- 
+
   if (command.indexOf("https")>=0){        //Write the tag
     writeURLToTag();
   }
-  
-  if (command=="C"){   //Set ROM -> Tanca les etiquetes
-    romIt=1;
+
+  if (command == "C"){   //Set ROM -> Tanca les etiquetes
+    romIt = 1;
     Serial.println("ROK*****");  //Rom enable
   }
-  
-  if (command=="D"){   //UnSet ROM -> NO tanquis les etiquetes
-    romIt=0;
+
+  if (command == "D"){   //UnSet ROM -> NO tanquis les etiquetes
+    romIt = 0;
     Serial.println("RKO*****");  //Rom disabled
   }
-  
+
 };

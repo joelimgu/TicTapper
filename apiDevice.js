@@ -7,7 +7,7 @@ var arduino = require("./arduino.js");
 var setup = require('./setup');
 
 
-var apiDevice={
+var apiDevice = {
 	nfc: new arduino(setup.antenna_a)
 	//feed: new arduino(setup.arduino_feed)
 };
@@ -46,7 +46,6 @@ apiDevice.nfcWrite = function (cmd) {
 	});
 	return deferred.promise;
 }
-
 
 //Export module
 module.exports = apiDevice;
