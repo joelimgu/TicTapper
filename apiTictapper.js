@@ -14,10 +14,10 @@ var apiTictapper = {
 
 
 apiTictapper.initialize = function(){
-	var deferred=Q.defer();
+	var deferred = Q.defer();
 
 	//Obrir els ports de cada device i connectar a la BBDD
-	promises=[apiDevice.connectDevices(),apiSql.connectSql()];
+	promises = [apiDevice.connectDevices(),apiSql.connectSql()];
 	Q.allSettled(promises).then(function (results) {
 		results.forEach(function (result) {
 	        if (result.state === "fulfilled") {

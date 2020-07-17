@@ -6,7 +6,6 @@ var Q = require("q");
 var LinuxInputListener = require('linux-input-device');
 var setup = require('./setup');
 var events = require("events");
-var PiServo = require("pi-servo");
 const chalk = require('chalk');
 
 var SW_LID = 0x00;
@@ -16,15 +15,10 @@ var sample = [];
 //QR Gun codification chars:
 var codes={ 30 : 'a', 48 : 'b', 46 : 'c', 32 : 'd', 18 : 'e', 33 : 'f', 34 : 'g', 35 : 'h', 23 : 'i', 36 : 'j', 37 : 'k', 38 : 'l', 50 : 'm', 49 : 'n', 24 : 'o', 25 : 'p', 16 : 'q', 19 : 'r', 31 : 's', 20 : 't', 22 : 'u', 47 : 'v', 17 : 'w', 45 : 'x', 21 : 'y', 44 : 'z', 11 : '0', 2 : '1', 3 : '2', 4 : '3', 5 : '4', 6 : '5', 7 : '6', 8 : '7', 9 : '8', 10 : '9', 52 : '.', 53 : '/', 39 : ':', 12 : '-' };
 
-var sv1 = new PiServo(4);
 
 //Constructor method
 function apiQRGun(){
 	//this.sv1 = sv1;
-
-	sv1.open();
-
-	var sv1b = sv1;
 
 	this.input = new LinuxInputListener(setup.keyboard_id);//creates an event whan recives data from setup.keyboard_id
 	this.eventEmitter = new events.EventEmitter();
@@ -54,15 +48,12 @@ function apiQRGun(){
 };
 
 
-apiQRGun.setServoInit = async function(){
-};
-
-apiQRGun.prototype.getUrl=function(){
+apiQRGun.prototype.getUrl = function(){
 	var deferred = Q.defer();
 	var emitter = this.eventEmitter;
 	emitter.on('data',function(data){
 		emitter.removeAllListeners('data');
-		console.log("\t"+chalk.yellow("-> ["+Date.now()+"] "+data.replace(/(\r\n|\n|\r)/gm,"")));
+		console.log("\t"+chalk.yellow("-> ["+Date.now()+"] " + data.replace(/(\r\n|\n|\r)/gm,"")));
 		deferred.resolve(data);
 	});
 	return deferred.promise;
@@ -70,7 +61,7 @@ apiQRGun.prototype.getUrl=function(){
 
 
 //suposo que transforms la url "dolenta" de la pistola QR en la bona transformant els caracters falsos
-apiQRGun.mapIt=function(val){
+apiQRGun.mapIt = function(val){
 	mayus = false;
 	str='';
 	val.forEach(function(elem){
