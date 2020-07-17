@@ -37,7 +37,6 @@ function apiQRGun(){
 		    	//console.log(apiQRGun.mapIt(sample));
 		    	var waitTill = new Date(new Date().getTime() + 250);	//Esperem 250 ms abans de tornar a 10 graus (és possible que el servo encara estigui en moviment anterior, anant cap a 60 degrees)
 					while(waitTill > new Date()){};
-		    	apiQRGun.setServoInit();
 		    	//var waitTill = new Date(new Date().getTime() + 500);
 					//while(waitTill > new Date()){};
 		    	emitter.emit('data', apiQRGun.mapIt(sample));

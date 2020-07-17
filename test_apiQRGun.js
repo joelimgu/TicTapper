@@ -12,13 +12,13 @@ async function test(){
 	var url = await myGun.getUrl();
 	console.log(url);
 
-	var url=await myGun.getUrl();
+	var url = await myGun.getUrl();
 	console.log(url);
 
-	var url=await myGun.getUrl();
+	var url = await myGun.getUrl();
 	console.log(url);
 
-	var url=await myGun.getUrl();
+	var url = await myGun.getUrl();
 	console.log(url);
 }
 
