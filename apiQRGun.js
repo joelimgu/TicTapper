@@ -2,9 +2,9 @@
 API to deal with QR Gun
 */
 
-var Q=require("q");
+var Q = require("q");
 var LinuxInputListener = require('linux-input-device');
-var setup=require('./setup');
+var setup = require('./setup');
 var events = require("events");
 var PiServo = require("pi-servo");
 const chalk = require('chalk');
@@ -24,7 +24,7 @@ function apiQRGun(){
 
 	sv1.open();
 
-	var sv1b=sv1;
+	var sv1b = sv1;
 
 	this.input = new LinuxInputListener(setup.keyboard_id);//creates an event whan recives data from setup.keyboard_id
 	this.eventEmitter = new events.EventEmitter();
@@ -49,29 +49,22 @@ function apiQRGun(){
 		    	emitter.emit('data', apiQRGun.mapIt(sample));
 		    	sample = [];
 		    };
-		};
+			};
 	});
 };
 
 
-apiQRGun.setServoInit=async function(){
-	sv1.setDegree(10);
+apiQRGun.setServoInit = async function(){
 };
 
-//estaria be saber que fa aixo
 apiQRGun.prototype.getUrl=function(){
-	var deferred=Q.defer();
-	var emitter=this.eventEmitter;
-	//var sv1= this.sv1;
-	emitter.on('data',function(d){
-		//console.log("EVENT RECEIVED FROM EMITTER: ",d);
+	var deferred = Q.defer();
+	var emitter = this.eventEmitter;
+	emitter.on('data',function(data){
 		emitter.removeAllListeners('data');
-		console.log("\t"+chalk.yellow("-> ["+Date.now()+"] "+d.replace(/(\r\n|\n|\r)/gm,"")));
-		//sv1.setDegree(10);
-		deferred.resolve(d);
+		console.log("\t"+chalk.yellow("-> ["+Date.now()+"] "+data.replace(/(\r\n|\n|\r)/gm,"")));
+		deferred.resolve(data);
 	});
-	sv1.setDegree(60);
-
 	return deferred.promise;
 };
 

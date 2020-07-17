@@ -8,12 +8,12 @@ const readlineSync = require('readline-sync');
 var replaceall = require('replaceall');
 var apiQRGun = require("./apiQRGun.js");
 
-var apiTictapper={
+var apiTictapper = {
 	qrGun: new apiQRGun()
 };
 
 
-apiTictapper.initialize=function(){
+apiTictapper.initialize = function(){
 	var deferred=Q.defer();
 
 	//Obrir els ports de cada device i connectar a la BBDD

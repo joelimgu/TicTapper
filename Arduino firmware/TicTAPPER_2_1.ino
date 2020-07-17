@@ -42,7 +42,7 @@ unsigned long lastInterrupt;
 void readSerialString() {
     while(Serial.available() == 0){}       //Wait till a serial data is available
     if(Serial.available()) {               //If serial port is available
-      command=Serial.readString();
+      command = Serial.readString();
     }
 }
 
@@ -82,9 +82,9 @@ void readTagId() {
   timeToDetect = endDetect - start;
   if (timeout==0){
     NfcTag tag = nfc.read();
-    tagId=tag.getUidString();
+    tagId = tag.getUidString();
   }else{
-    tagId="error";
+    tagId = "error";
   }
   endIdentify = millis();
   timeToIdentify = endIdentify - start;
@@ -104,14 +104,14 @@ bool checkTagUri() {
   NfcTag tag = nfc.read();
   endOfRead = millis();
   timeToRead = endOfRead - start;
-  NdefMessage message =tag.getNdefMessage();        //Get the ndef
+  NdefMessage message = tag.getNdefMessage();        //Get the ndef
   NdefRecord record = message.getRecord(0);         //Get the record of the ndef
-  String payload=record.payloadStringify();
-  String original="."+command;                      //not sure if needed: original.replace("http://","."); -> Old school, if it works don't touch it.
-  if (original==payload){
+  String payload = record.payloadStringify();
+  String original = "."+command;                      //not sure if needed: original.replace("http://","."); -> Old school, if it works don't touch it.
+  if (original == payload){
    return true;                                     //Check is success :)
   }else{
-    response=response+payload+"::::"+original+"++";
+    response = response + payload + "::::" + original + "++";
     return false;                                   //Check failed :(
   }
 }
@@ -184,43 +184,43 @@ void loop() {
 */
 
   if (command.indexOf("https")>=0){        //Write the tag
-    timeToDetect=0;
-    timeToIdentify=0;
-    timeToRead=0;
-    timeToWrite=0;
-    response="";
+    timeToDetect = 0;
+    timeToIdentify = 0;
+    timeToRead = 0;
+    timeToWrite = 0;
+    response = "";
     readTagId();                          //Read the id of the NFC chip
-    response=response+tagId+"**";              //Prepare response string idTag**
-    unsigned long start= millis();
+    response = response + tagId + "**";              //Prepare response string idTag**
+    unsigned long start = millis();
     unsigned long endOfWrite = 0;
     if (writeTagUri()){                     //Write the URL into the chip
       endOfWrite = millis();
       if (checkTagUri()){                     //Check if the written URL is correct
-        if (romIt==1){                          //ROM it or not:
+        if (romIt == 1){                          //ROM it or not:
           romTag();
-          response=response+"RO**";               //Prepare response string RO => Read Only => SUCCESS AND ROMED
+          response = response + "RO**";               //Prepare response string RO => Read Only => SUCCESS AND ROMED
         }else{
-          response=response+"R**";                //Prepare response string R => Read => SUCCESS AND NO ROMED
+          response = response + "R**";                //Prepare response string R => Read => SUCCESS AND NO ROMED
         }
       }else{
-        response=response+"RE**";                 //Prepare response string RE => Read Error
+        response = response + "RE**";                 //Prepare response string RE => Read Error
       }
     }else{
       endOfWrite = millis();
-      response=response+"WE**";                 //Prepare response string WE => Write Error
+      response = response + "WE**";                 //Prepare response string WE => Write Error
     }
     timeToWrite = endOfWrite - start;
     /* TODO: ADD timing params: Time to identify, Time to Write, Time to Read, Try to get more info about the chip */
-    response=response+timeToDetect+"**";                 //Prepare response Time to Read tag in miliseconds
-    response=response+timeToIdentify+"**";                 //Prepare response Time to Read tag in miliseconds
-    response=response+timeToRead+"**";                 //Prepare response Time to Read tag in miliseconds
-    response=response+timeToWrite+"**";                 //Prepare response Time to write tag in miliseconds
-    Serial.println(response+"***");
+    response = response + timeToDetect + "**";                 //Prepare response Time to Read tag in miliseconds
+    response = response + timeToIdentify + "**";                 //Prepare response Time to Read tag in miliseconds
+    response = response + timeToRead + "**";                 //Prepare response Time to Read tag in miliseconds
+    response = response + timeToWrite + "**";                 //Prepare response Time to write tag in miliseconds
+    Serial.println(response + "***");
   }
 
-  if (command=="S"){           //Set Sticker on position
+  if (command == "S"){           //Set Sticker on position
     stepper.moveTo(100000);       //Put timeout steps
-    bool aux_ldr=ldr_val;
+    bool aux_ldr = ldr_val;
     if (aux_ldr){ //In normal operation
       while(ldr_val){               //Run till next sticker
         stepper.run();              //Step it

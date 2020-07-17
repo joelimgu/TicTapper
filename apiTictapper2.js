@@ -62,7 +62,7 @@ async function insertTagToDB(job, start, nfcWr, url){
 		created_at: Date.now()
 	};
 
-  await promises = Promises.all([database.insertTag(tagObj), database.putActiveJob(job)]).then((msg) => {deferred.resolve(job)}).catch((err) => throw err);
+  await Promises.all([database.insertTag(tagObj), database.putActiveJob(job)]).then((msg) => {deferred.resolve(job)}).catch((err) => {throw err});
 
   console.log("\t" + chalk.green("-> Success. Speed: " + speed + " ms. Finishing job in " + ((speed*left)/1000) + " seconds."));
 
@@ -84,7 +84,7 @@ apiTictapper.mainLoop = async function(){
 
       var rom = "D"; //Don not rom stickers for this job
 			if (job.rom == 1)		rom = "C"; //Rom stickers for this job
-			var r = await apiDevice.nfcSetRom(rom);
+			var r = await apiDevice.nfcSetRom(rom); //useless variable, only for the await
 			//Set first sticker on position:
 			//var r=await apiDevice.nfcWrite("S");
 			console.log(chalk.green("First sticker in pre-position"));
@@ -102,7 +102,7 @@ apiTictapper.mainLoop = async function(){
           try {
             await insertTag(job, start, nfcWr, url);  //stores the tag in the db
           }catch(err){
-              console.log(chalk..red("An error has occured : " + err));
+              console.log(chalk.red("An error has occured : " + err));
           };
 
 				}else{	//An error ocurred while writing NFC
@@ -114,7 +114,7 @@ apiTictapper.mainLoop = async function(){
             try {
               await insertTag(job, start, nfcWr, url);
             }catch(err){
-                console.log(chalk..red("An error has occured : " + err)); //stores the tag done in db
+                console.log(chalk.red("An error has occured : " + err)); //stores the tag done in db
             };
 					}else{
 						//apiGpio.buzzer();
@@ -135,4 +135,4 @@ apiTictapper.mainLoop = async function(){
 
 
 //Export module
-module.exports=apiTictapper;
+module.exports = apiTictapper;

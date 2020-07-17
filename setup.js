@@ -7,7 +7,7 @@ var setup={
 	    database : 'KONI'
 	},
     antenna_a: {				//ARDUINO AMB PLACA NFC I PISTOLA QR
-    	port:   '/dev/ttyACM0', //'/dev/ttyUSB0',   //  /dev/ttyACM0
+  	port:   '/dev/ttyACM0', //'/dev/ttyUSB0',   //  /dev/ttyACM0
 		bauds: 9600, //9600, //19200  //vel de conexió amb arduino
 		parity: 'none',
 		bytes: 8,
