@@ -13,7 +13,7 @@ var Database = require("./DatabaseClass");
 var database
 
 //++++++++++++++++++++++++++INIT++++++++++++++++++++++++//
-async function initialize(){
+const initialize = async function(){
   let deferred = Q.defer();
   database = await new Database(setup.sql.database, "jobs", "tags");
 
@@ -73,7 +73,7 @@ async function insertTagToDB(job, start, nfcWr, url){
 };
 
 
-apiTictapper.mainLoop = async function(){
+const mainLoop = async function(){
 	var deferred = Q.defer();
 	//console.log(chalk.green("\nAwaiting serial..."));
 	while(true){	//En principi no ha de sortir mai d'aquí
@@ -135,4 +135,4 @@ apiTictapper.mainLoop = async function(){
 
 
 //Export module
-module.exports = apiTictapper;
+module.exports = {initialize, mainLoop};
