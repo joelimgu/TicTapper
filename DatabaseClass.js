@@ -9,7 +9,7 @@ const chalk = require('chalk');             //color terminal
 
 class Database {                             //class to create a db to CRUD
   constructor(db, jobsTable, tagsTable){
-    this.db = db; //only for info porpuses, never really used
+    this.db = db; //the db name
     this.jobsTable = jobsTable;
     this.tagsTable = tagsTable;
   };
@@ -17,7 +17,8 @@ class Database {                             //class to create a db to CRUD
   runQuery(query) {                         //runs a SQL query as a promise
     let deferred = Q.defer();
     if (!this.connectedDB){throw "The db is not connected"}
-    this.connectedDB.query(query, function (err, result){
+    if (!this.db){throw "No db defined, use obj.db = \`your db\` to define it"}
+    this.connectedDB.query("USE " + this.db + query, function (err, result){
       if (err) throw err;                 //passes the error if thers one
       deferred.resolve(result);           //if not resolve the promise and pass the querry result [{id:1, name:"hahah"...},{...},...]
     });
