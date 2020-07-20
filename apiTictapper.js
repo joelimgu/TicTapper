@@ -111,7 +111,7 @@ const mainLoop = async function(){
 
 				if ((nfcWr.indexOf("error")<0) && ((nfcWr.indexOf("Error"))<0) ) {
           try {
-            await insertTag(job, start, nfcWr, url);  //stores the tag in the db
+            await insertTagToDB(job, start, nfcWr, url);  //stores the tag in the db
           }catch(err){
               console.log(chalk.red("An error has occured : " + err));
           };
@@ -123,7 +123,7 @@ const mainLoop = async function(){
 					//tags should be an array of teh written tags and i an i++ variable to keep track of the tag we are doing and tst only that the urs exists in it
 					if (nfcWr.indexOf(tags[i].url)>=0){ //La url està ben desada
             try {
-              await insertTag(job, start, nfcWr, url);
+              await insertTagToDB(job, start, nfcWr, url);
             }catch(err){
                 console.log(chalk.red("An error has occured : " + err)); //stores the tag done in db
             };
