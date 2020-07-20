@@ -22,8 +22,8 @@ function arduino(setup){
 	var emitter = this.eventEmitter;
 
 	//Create a listener each time arduino sends a string with \n as End of string
-	parser.on('data', function(d){
-   		emitter.emit('data',d);
+	parser.on('data', function(data){
+   		emitter.emit('data',data);
 	});
 };
 
@@ -35,7 +35,7 @@ arduino.prototype.openPort = function () {
 	this.port.on('open', function(){
 		console.log(chalk.green("Opening serial on port "+setup_device.port+" at "+setup_device.bauds));
 	});
-	emitter.on('data',function(d){
+	emitter.on('data',function(data){
 		//console.log("EVENT EMITTER RECEIVED:",d);
 		console.log("\t"+chalk.yellow("-> ["+Date.now()+"] "+data.replace(/(\r\n|\n|\r)/gm,"")));
 		emitter.removeAllListeners('data');
