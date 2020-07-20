@@ -22,7 +22,7 @@ const initialize = async function(){
         console.log(chalk.green("->" + msg[0]));
         console.log(chalk.green("-> Database " + msg[1]));
   database.runQuery(DDBB.DEFAULT_QUERY).then((msg) => {
-                                        console.log(chalk.green(msg));
+                                        console.log(msg);
                                         console.log("Default querry executed");})
                                         .catch((err) => {throw err});
     deferred.resolve();
