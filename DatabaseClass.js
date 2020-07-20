@@ -94,7 +94,7 @@ class Database {                             //class to create a db to CRUD
 
 
 
-  insertTag(){ //inserts a tag into the tags table
+  insertTag(tag){ //inserts a tag into the tags table
     var deferred=Q.defer();
     if (typeof this.tagsTable == 'undefined'){ //chach if thers a tags table
       throw "no tags table has been defined"
