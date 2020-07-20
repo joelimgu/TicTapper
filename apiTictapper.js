@@ -69,7 +69,7 @@ async function insertTagToDB(job, start, nfcWr, url){
 		created_at: Date.now()
 	};
 
-  await Promise.all([database.insertTag(tagObj), database.putActiveJob(job)]).then((msg) => {deferred.resolve(job)}).catch((err) => {throw err});
+  await Promise.all([database.insertTag(tagObj), database.updateJobQty(job)]).then((msg) => {deferred.resolve(job)}).catch((err) => {throw err});
 
   console.log("\t" + chalk.green("-> Success. Speed: " + speed + " ms. Finishing job in " + ((speed*left)/1000) + " seconds."));
 

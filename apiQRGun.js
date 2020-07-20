@@ -62,7 +62,7 @@ apiQRGun.prototype.getUrl = function(){
 	var emitter = this.eventEmitter;
 	emitter.on('data',function(data){
 		emitter.removeAllListeners('data');
-		console.log("\t"+chalk.yellow("-> ["+Date.now()+"] " + data.replace(/(\r\n|\n|\r)/gm,"")));
+		console.log("\t"+chalk.gray("-> ["+Date.now()+"] " + data.replace(/(\r\n|\n|\r)/gm,"")));
 		deferred.resolve(data);
 	});
 	return deferred.promise;
