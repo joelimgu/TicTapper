@@ -3,7 +3,7 @@
 #include <PN532.h>
 #include <NfcAdapter.h>
 #include <Math.h>
-
+#include <ArduinoJson.h>
 
 
 //NFC shield
@@ -25,6 +25,7 @@ unsigned long timeToDetect;    //Variable to store the time it took to detect TA
 unsigned long timeToIdentify;  //Variable to store the time it took to read TAG id
 unsigned long timeToRead;      //Variable to store the time it took to read a NDEF field
 unsigned long timeToWrite;     //Variable to store the time it took to write a NDEF field
+
 
 
 
@@ -194,9 +195,37 @@ void setup(){
   while (!Serial) { }                     // wait for serial port to connect. Needed for native USB
   Serial.flush();
   Serial.println("Arduino:nfc:Ready:*****");
+
+  /*
+  //JSON OBJECT CREATION
+  const size_t capacity = JSON_OBJECT_SIZE(6);
+  StaticJsonDocument <256> doc;
+  
+  doc["tagID"] = "22aaee3344ff";
+  doc["operationType"] = "RO";
+  doc["timeToDetect"] = 122;
+  doc["timeToIdentify"] = 211;
+  doc["timeToRead"] = 432;
+  doc["timeToWrite"] = 223;
+  
+  serializeJson(doc, Serial);
+  Serial.println();
+  doc["tagID"] = "aaaaaaaaaaa";
+  delay(200);
+  serializeJson(doc, Serial);
+  Serial.println();
+  Serial.println("printed");
+  const char* a = doc["tagID"];
+  Serial.println(a);
+  doc.clear();
+  serializeJson(doc, Serial);
+  */
 };
 
+
+
 void loop(){
+
  command = "";
  readSerialString();
 

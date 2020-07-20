@@ -1,6 +1,6 @@
 
 
-var Q=require("q");
+var Q = require("q");
 var events = require("events");
 const SerialPort = require('serialport');
 const Readline = require('@serialport/parser-readline');
@@ -9,20 +9,6 @@ var digestLog=require("./digestLog.js");
 
 const portName = "COM6";
 
-
-//https://www.youtube.com/watch?v=__FSpGHx9Ow
-// void setup() {
-//   Serial.begin(9600); // open the serial port at 9600 bps:
-//
-// };
-//
-//
-// void loop(){
-//   if (Serial.available() > 0){
-//     Serial.println("I recieved: " + Serial.readString());
-//   };
-//   delay(1000);
-// };
 
 //The serial port parser
 const port = new SerialPort(portName, {
