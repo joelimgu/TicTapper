@@ -68,7 +68,7 @@ async function insertTagToDB(job, start, nfcWr, url){
 		datum: auxnfcWr,
 		created_at: Date.now()
 	};
-  console.log("71");
+
   await Promise.all([database.insertTag(tagObj), database.updateJobQty(job)]).then((msg) => {deferred.resolve(job)}).catch((err) => {throw err});
 
   console.log("\t" + chalk.green("-> Success. Speed: " + speed + " ms. Finishing job in " + ((speed*left)/1000) + " seconds."));
@@ -81,7 +81,7 @@ async function insertTagToDB(job, start, nfcWr, url){
 };
 
 
-const mainLoop = async function(){
+const mainLoop = async function() {
 	var deferred = Q.defer();
 	//console.log(chalk.green("\nAwaiting serial..."));
 	while(true){	//En principi no ha de sortir mai d'aquí
@@ -90,14 +90,13 @@ const mainLoop = async function(){
 		var job = await database.getActiveJob();	//Gets the first active job found
     job = job[0]; //gets the job as a dictionary as the raw data is an array of one item but wiht the proises you gave to do it after getting the raw data [{id:1,name:....}] --> {id:1,name:....}
     console.log(chalk.blue("Found: " + job));
-		if (!_.isEmpty(job)){                   //if thers a job:
+		if (!_.isEmpty(job)){                   //if ther's a job:
 			console.log(chalk.green("Found active job:" + job.ref + " " + job.name + " " + job.qtydone + "/" + job.qty));
 
       var rom = "D"; //Don not rom stickers for this job
 			if (job.rom == 1)		rom = "C"; //Rom stickers for this job
 			var r = await apiDevice.nfcSetRom(rom); //useless variable, only for the await
 			//Set first sticker on position:
-			//var r=await apiDevice.nfcWrite("S");
 			console.log(chalk.green("First sticker in pre-position"));
 
 			while (job.qtydone < job.qty){
@@ -128,7 +127,6 @@ const mainLoop = async function(){
                 console.log(chalk.red("An error has occured : " + err)); //stores the tag done in db
             };
 					}else{
-						//apiGpio.buzzer();
 						var ans = readlineSync.question('\t -> Solve the issue and press enter to continue');
 					}
 				}
