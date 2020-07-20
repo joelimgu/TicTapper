@@ -2,9 +2,9 @@
 var setup={
 	sql: {
 	    host : 'localhost',
-	    user : 'tictap',
-	    password : '1234',
-	    database : 'koni'
+	    user : 'root',
+	    password : 'akandemore',
+	    database : 'Tests_Joel'
 	},
     antenna_a: {				//ARDUINO AMB PLACA NFC I PISTOLA QR
   	port:   '/dev/ttyACM0', //'/dev/ttyUSB0',   //  /dev/ttyACM0
