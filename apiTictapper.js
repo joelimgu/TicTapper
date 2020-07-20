@@ -16,19 +16,21 @@ var database
 //++++++++++++++++++++++++++INIT++++++++++++++++++++++++//
 const initialize = async function(){
   let deferred = Q.defer();
-  database = await new Database(setup.sql.database, "jobs", "tags");
+  try {//easier to use try catch with the awaits
+    database = await new Database(setup.sql.database, "jobs", "tags");//created the db object to interact with the db
 
-  await Promise.all([apiDevice.connectDevices(), database.connect(setup.sql)]).then((msg) => {
-        console.log(chalk.green("->" + msg[0]));
-        console.log(chalk.green("-> Database " + msg[1]));
-  database.runQuery(DDBB.DEFAULT_QUERY).then((msg) => {
-                                        console.log(msg);
-                                        console.log("Default querry executed");})
-                                        .catch((err) => {throw err});
+    await Promise.all([apiDevice.connectDevices(), database.connect(setup.sql)]).then((msg) => { //connects to the database and creates the connections to the arduino
+          console.log(chalk.green("->" + msg[0]));
+          console.log(chalk.green("-> Database " + msg[1]));
+    });
+
+    await Promise.all([database.runQuery(DDBB.DEFAULT_JOBS_TABLE),database.runQuery(DDBB.DEFAULT_TAGS_TABLE)]);//ensures that the tables exist and if not creates them
+
     deferred.resolve();
-  }).catch((err) => {
-      throw err;
-  });
+
+  }catch(err){
+    console.log(chalk.red(err));
+  }
   return deferred.promise;
 };
 
