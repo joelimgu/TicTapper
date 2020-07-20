@@ -75,7 +75,7 @@ class Database {                             //class to create a db to CRUD
       throw "The jobs table hasn't been asigned to this object, please add what table are the jobs stored"
     };
     let query = "SELECT * FROM " + this.jobsTable + " WHERE status='start' ORDER BY id DESC LIMIT 1" //queries to find the active jobs and returns them with desc order by id
-    this.runQuery().then((res) => {deferred.resolve(res)})    //handles the promise
+    this.runQuery(query).then((res) => {deferred.resolve(res)})    //handles the promise
                    .catch((err => {throw(err);}));
     return deferred.promise;
   };
