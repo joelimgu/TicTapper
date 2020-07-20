@@ -101,9 +101,9 @@ const mainLoop = async function(){
 			console.log(chalk.green("First sticker in pre-position"));
 
 			while (job.qtydone < job.qty){
-				var actualjob = await apiSql.getActiveJob(); // should be able to delete but its here for now
+				var actualjob = await database.getActiveJob(); // should be able to delete but its here for now
 				var start = Date.now();   //stores the start time to know how much it took later
-				console.log(chalk.cyan("\tProcessing sticker "+(actualjob.qtydone+1)+"/"+actualjob.qty)); //infos the user of the progress made
+				console.log(chalk.cyan("\tProcessing sticker " + (actualjob.qtydone+1) + "/" + actualjob.qty)); //infos the user of the progress made
 
 				var url = await apiTictapper.qrGun.getUrl();  //gets the url
 
