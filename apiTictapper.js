@@ -87,10 +87,11 @@ const mainLoop = async function(){
 	while(true){	//En principi no ha de sortir mai d'aquí
 
     console.log(chalk.blue.bold("Looking for active job"));
-		var job = await database.getActiveJob()[0];	//Gets the first active job found
-    console.log("Found: " + job);
+		var job = await database.getActiveJob();	//Gets the first active job found
+    job = job[0]; //gets the job as a dictionary as the raw data is an array of one item but wiht the proises you gave to do it after getting the raw data [{id:1,name:....}] --> {id:1,name:....}
+    console.log(chalk.blue("Found: " + job));
 		if (!_.isEmpty(job)){                   //if thers a job:
-			console.log(chalk.green("Found active job:"+job.ref+" "+job.name+" "+job.qtydone+"/"+job.qty));
+			console.log(chalk.green("Found active job:" + job.ref + " " + job.name + " " + job.qtydone + "/" + job.qty));
 
       var rom = "D"; //Don not rom stickers for this job
 			if (job.rom == 1)		rom = "C"; //Rom stickers for this job
