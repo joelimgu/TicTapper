@@ -56,7 +56,7 @@ async function insertTagToDB(job, start, nfcWr, url){
 			//uid -> id xip NFC ** (readonly(RO),readOk(R),readError(RE),qwriteError(WE)) ** .....
 															//en relaitat es write and rom pero es RO....
 	var tagObj = {
-		job_id: actualjob.id,
+		job_id: job.id,
 		url: url,
 		uid: auxNfc[0],
 		status: "Success",
@@ -103,7 +103,7 @@ const mainLoop = async function(){
 			while (job.qtydone < job.qty){
 				var actualjob = await database.getActiveJob(); // should be able to delete but its here for now
 				var start = Date.now();   //stores the start time to know how much it took later
-				console.log(chalk.cyan("\tProcessing sticker " + (actualjob.qtydone+1) + "/" + actualjob.qty)); //infos the user of the progress made
+				console.log(chalk.cyan("\tProcessing sticker " + (job.qtydone+1) + "/" + job.qty)); //infos the user of the progress made
 
 				var url = await apiTictapper.qrGun.getUrl();  //gets the url
 
