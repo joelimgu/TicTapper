@@ -87,7 +87,7 @@ const mainLoop = async function(){
 	while(true){	//En principi no ha de sortir mai d'aquí
 
     console.log(chalk.blue("Looking for active job"));
-		var job = await apiSql.getActiveJob();	//1- Check Job
+		var job = await database.getActiveJob();	//1- Check Job
 		if (!_.isEmpty(job)){                   //if thers a job:
 			console.log(chalk.green("Found active job:"+job.ref+" "+job.name+" "+job.qtydone+"/"+job.qty));
 
