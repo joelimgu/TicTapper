@@ -1,5 +1,5 @@
 
-const DEFAULT_QUERY = "CREATE TABLE IF NOT EXISTS \`jobs\` ("+
+const DEFAULT_JOBS_TABLE = "CREATE TABLE IF NOT EXISTS \`jobs\` ("+
   "\`id\` int NOT NULL AUTO_INCREMENT,"+
   "\`name\` varchar(255) NOT NULL,"+
   "\`ref\` varchar(255) NOT NULL,"+
@@ -12,8 +12,9 @@ const DEFAULT_QUERY = "CREATE TABLE IF NOT EXISTS \`jobs\` ("+
   "\`modified_at\` double NOT NULL,"+
   "\`created_at\` double DEFAULT NULL," +
   "PRIMARY KEY (\`id\`)"+
-") ENGINE=MyISAM DEFAULT CHARSET=UTF8MB3 AUTO_INCREMENT=1;"+
+") ENGINE=MyISAM DEFAULT CHARSET=UTF8MB3 AUTO_INCREMENT=1;"
 
+const DEFAULT_TAGS_TABLE =
 "CREATE TABLE IF NOT EXISTS \`tags\` ("+
   "\`id\` int NOT NULL AUTO_INCREMENT,"+
   "\`job_id\` int NOT NULL,"+
@@ -30,4 +31,4 @@ const DEFAULT_QUERY = "CREATE TABLE IF NOT EXISTS \`jobs\` ("+
 ") ENGINE=MyISAM  DEFAULT CHARSET=UTF8MB3 AUTO_INCREMENT=1 ;";
 
 
-module.exports = {DEFAULT_QUERY};
+module.exports = {DEFAULT_JOBS_TABLE, DEFAULT_TAGS_TABLE};
