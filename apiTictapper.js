@@ -7,6 +7,7 @@ var _ = require('lodash');
 const readlineSync = require('readline-sync');
 var replaceall = require('replaceall');
 var apiQRGun = require("./apiQRGun.js");
+var DDBB = require("./DDBB.js");
 var Database = require("./DatabaseClass");
 
 
@@ -18,8 +19,11 @@ const initialize = async function(){
   database = await new Database(setup.sql.database, "jobs", "tags");
 
   await Promise.all([apiDevice.connectDevices(), database.connect(setup.sql)]).then((msg) => {
-    console.log(chalk.green("->" + msg[0]));
-    console.log(chalk.green("-> Database " + msg[1]));
+        console.log(chalk.green("->" + msg[0]));
+        console.log(chalk.green("-> Database " + msg[1]));
+  database.runQuery(DDBB.DEFAULT_QUERY).then((msg) => {
+                                        console.log(chalk.green(msg));})
+                                        .catch((err) => {throw err});
     deferred.resolve();
   }).catch((err) => {
       throw err;
@@ -32,7 +36,7 @@ var apiTictapper={
 	qrGun: new apiQRGun()
 };
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++INSERT TAL TO DB+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 async function insertTagToDB(job, start, nfcWr, url){
   let deferred = Q.defer();
 
@@ -69,6 +73,7 @@ async function insertTagToDB(job, start, nfcWr, url){
 	if (job.status == "stop"){ //infos the user that the job has been finished ( should add a log aftes the while to inform the end)
 		console.log(chalk.green("Job " + job.name + " Finished."));
 	};
+  deferred.resolve();
   return deferred.promise;
 };
 

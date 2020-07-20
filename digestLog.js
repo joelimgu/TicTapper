@@ -2,7 +2,7 @@
 var digestLog={};
 
 
-digestLog.nfcLog=function(str){
+digestLog.nfcLog = function(str){
 	var response=str;
 	if (str=="ROK"){
 		response="NFC will ROM stickers";
@@ -41,7 +41,7 @@ digestLog.nfc=function(str){
 				detect:"",
 				identify:"",
 				read:"",
-				write:""			
+				write:""
 			}
 	}
 	var aux=str.split('\n');
@@ -70,21 +70,20 @@ digestLog.nfc=function(str){
 			response.message.read=aux2[4];
 			response.message.write=aux2[5];
 		}else{
-			response.debug+=aux[i]+"\n";	
-		}	
+			response.debug+=aux[i]+"\n";
+		}
 	}
 	return response;
 }
 
-digestLog.nfcRom=function(str){
-	if (str=="ROK")	return "NFC will ROM stickers";
+digestLog.nfcRom = function(str){
+	if (str == "ROK")	return "NFC will ROM stickers";
 	else return "NFC will NOT ROM stickers";
 }
 
 
 //Export module
-module.exports=digestLog;
+module.exports = digestLog;
 
 //0432c56afe4a81**RO**26**73**209**1   -> OK
 //0432c56afe4a81**::::.https://varias-go.tictap.me/track/2N87EG4O++RE**27**237**178**1 -> KO
-

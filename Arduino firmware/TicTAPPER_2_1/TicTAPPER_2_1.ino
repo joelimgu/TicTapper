@@ -34,7 +34,7 @@ unsigned long timeToWrite;     //Variable to store the time it took to write a N
 void readSerialString() {
     while(Serial.available() == 0){}       //Wait till a serial data is available
     if(Serial.available()) {               //If serial port is available
-      command = Serial.readString();
+      command = Serial.readString();      //saves the input ( keep in mind if useing the arduino serial monitor it should be configured with no line ending)
     }
 }
 
@@ -46,9 +46,9 @@ void writeURLToTag(){ //function called when a URL is passed through the USB to 
     timeToWrite = 0;
     response = "";
     readTagId();                          //Read the id of the NFC chip
-    response = response + tagId + "**";              //Prepare response string idTag**
     unsigned long start = millis();
     unsigned long endOfWrite = 0;
+    response = response + tagId + "**";              //Prepare response string idTag**
     if (writeTagUri()){                     //Write the URL into the chip
       endOfWrite = millis();
       if (checkTagUri()){                     //Check if the written URL is correct
@@ -133,7 +133,7 @@ bool checkTagUri() {
   if (original == payload){
    return true;                                     //Check is success :)
   }else{
-    response = response + payload + "::::" + original + "++";
+    //response = response + payload + "::::" + original;
     return false;                                   //Check failed :(
   }
 }
@@ -159,7 +159,6 @@ void writeURL(){
     timeToWrite = 0;
     response = "";
     readTagId();                          //Read the id of the NFC chip
-    response = response + tagId + "**";              //Prepare response string idTag**
     unsigned long start = millis();
     unsigned long endOfWrite = 0;
     if (writeTagUri()){                     //Write the URL into the chip
@@ -180,10 +179,11 @@ void writeURL(){
     }
     timeToWrite = endOfWrite - start;
     /* TODO: ADD timing params: Time to identify, Time to Write, Time to Read, Try to get more info about the chip */
-    response = response+timeToDetect + "**";                 //Prepare response Time to Read tag in miliseconds
-    response = response+timeToIdentify + "**";                 //Prepare response Time to Read tag in miliseconds
-    response = response+timeToRead + "**";                 //Prepare response Time to Read tag in miliseconds
-    response = response+timeToWrite + "**";                 //Prepare response Time to write tag in miliseconds
+    response = response + tagId + "**";              //Prepare response string idTag**
+    response = response + timeToDetect + "**";                 //Prepare response Time to Read tag in miliseconds
+    response = response + timeToIdentify + "**";                 //Prepare response Time to Read tag in miliseconds
+    response = response + timeToRead + "**";                 //Prepare response Time to Read tag in miliseconds
+    response = response + timeToWrite + "**";                 //Prepare response Time to write tag in miliseconds
     Serial.println(response + "***");
 }
 
@@ -194,8 +194,6 @@ void setup(){
   while (!Serial) { }                     // wait for serial port to connect. Needed for native USB
   Serial.flush();
   Serial.println("Arduino:nfc:Ready:*****");
-  command = "http://joelimbergamoguasch.me";
-  writeURL();
 };
 
 void loop(){
@@ -215,5 +213,4 @@ void loop(){
     romIt = 0;
     Serial.println("RKO*****");  //Rom disabled
   }
-
 };

@@ -9,7 +9,7 @@ var events = require("events");
 const SerialPort = require('serialport');
 const Readline = require('@serialport/parser-readline');
 const chalk = require('chalk');
-var digestLog=require("./digestLog.js");
+var digestLog = require("./digestLog.js");
 
 //Constructor method
 function arduino(setup){
@@ -37,9 +37,9 @@ arduino.prototype.openPort = function () {
 	});
 	emitter.on('data',function(d){
 		//console.log("EVENT EMITTER RECEIVED:",d);
-		console.log("\t"+chalk.yellow("-> ["+Date.now()+"] "+d.replace(/(\r\n|\n|\r)/gm,"")));
+		console.log("\t"+chalk.yellow("-> ["+Date.now()+"] "+data.replace(/(\r\n|\n|\r)/gm,"")));
 		emitter.removeAllListeners('data');
-		deferred.resolve(d);
+		deferred.resolve(data);
 	});
 	this.port.open();
 	return deferred.promise;
@@ -51,7 +51,7 @@ arduino.prototype.writePort = function (str) {
 	let emitter = this.eventEmitter;
 	emitter.on('data',function(data){
 		//console.log("EVENT EMITTER RECEIVED:",d);
-		console.log("\t"+chalk.yellow("-> ["+Date.now()+"] "+digestLog.nfcLog(data.replace(/(\r\n|\n|\r)/gm,""))));	//digestLog.nfcRom(
+		console.log("\t"+chalk.yellow("-> ["+Date.now()+"] " + digestLog.nfcLog(data.replace(/(\r\n|\n|\r)/gm,""))));	//digestLog.nfcRom(
 		//console.log("\t"+chalk.yellow("-> "+d.replace(/(\r\n|\n|\r)/gm,"")));	//digestLog.nfc(
 		emitter.removeAllListeners('data');
 		deferred.resolve(data);

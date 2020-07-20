@@ -16,7 +16,7 @@ class Database {                             //class to create a db to CRUD
 
   runQuery(query) {                         //runs a SQL query as a promise
     let deferred = Q.defer();
-    if (!this.connectedDB){throw "the db is not connected"}
+    if (!this.connectedDB){throw "The db is not connected"}
     this.connectedDB.query(query, function (err, result){
       if (err) throw err;                 //passes the error if thers one
       deferred.resolve(result);           //if not resolve the promise and pass the querry result [{id:1, name:"hahah"...},{...},...]
