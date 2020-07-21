@@ -153,7 +153,7 @@ void romTag() {
   nfc.ROM();
 }
 
-void writeURL(){
+void writeURL(){  
     timeToDetect = 0;
     timeToIdentify = 0;
     timeToRead = 0;
@@ -226,6 +226,11 @@ void setup(){
 
 void loop(){
 
+ if(Serial.available()) {               //If serial port is available
+      Serial.println( Serial.readString();      //saves the input ( keep in mind if useing the arduino serial monitor it should be configured with no line ending)
+    }
+
+/*
  command = "";
  readSerialString();
 
@@ -241,5 +246,5 @@ void loop(){
   if (command == "D"){   //UnSet ROM -> NO tanquis les etiquetes
     romIt = 0;
     Serial.println("RKO*****");  //Rom disabled
-  }
+  }*/
 };

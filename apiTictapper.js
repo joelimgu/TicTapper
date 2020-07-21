@@ -2,7 +2,7 @@ var Q = require("q");
 var apiDevice = require("./apiDevice.js");
 const chalk = require('chalk');
 var setup = require('./setup');
-var apiSql = require("./sql.js");
+//var apiSql = require("./sql.js");
 var _ = require('lodash');
 const readlineSync = require('readline-sync');
 var replaceall = require('replaceall');
@@ -13,33 +13,12 @@ var Database = require("./DatabaseClass");
 
 var database
 
-//++++++++++++++++++++++++++INIT++++++++++++++++++++++++//
-const initialize = async function(){
-  let deferred = Q.defer();
-  try {//easier to use try catch with the awaits
-    database = await new Database(setup.sql.database, "jobs", "tags");//created the db object to interact with the db
-
-    await Promise.all([apiDevice.connectDevices(), database.connect(setup.sql)]).then((msg) => { //connects to the database and creates the connections to the arduino
-          console.log(chalk.green("->" + msg[0]));
-          console.log(chalk.green("-> Database " + msg[1]));
-    });
-
-    await Promise.all([database.runQuery(DDBB.DEFAULT_JOBS_TABLE),database.runQuery(DDBB.DEFAULT_TAGS_TABLE)]);//ensures that the tables exist and if not creates them
-
-    deferred.resolve();
-
-  }catch(err){
-    console.log(chalk.red(err));
-  }
-  return deferred.promise;
-};
-
-
-var apiTictapper={
+var apiTictapper = {
 	qrGun: new apiQRGun()
 };
 
-//++++++++++++++++++++++++++++++INSERT TAL TO DB+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+//++++++++++++++++++++++++++++++INSERT TAG TO DB+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 async function insertTagToDB(job, start, nfcWr, url){
   let deferred = Q.defer();
 
@@ -81,27 +60,59 @@ async function insertTagToDB(job, start, nfcWr, url){
 };
 
 
+//++++++++++++++++++++++++SET ROM++++++++++++++++++++++++++++++++++++++++++++++++
+function setRom(job){ //sets the rom of the arduino
+  let rom = "D"; //Don not rom stickers for this job
+  if (job.rom == 1)		rom = "C"; //Rom stickers for this job
+  let r = apiDevice.nfcSetRom(rom); //useless variable, only for the await
+};
+
+
+
+//++++++++++++++++++++++++++INIT++++++++++++++++++++++++//
+const initialize = async function(){
+  let deferred = Q.defer();
+  try {//easier to use try catch with the awaits
+    database = await new Database(setup.sql.database, "jobs", "tags");//created the db object to interact with the db
+
+    await Promise.all([apiDevice.connectDevices(), database.connect(setup.sql)]).then((msg) => { //connects to the database and creates the connections to the arduino
+          console.log(chalk.green("->" + msg[0]));
+          console.log(chalk.green("-> Database " + msg[1]));
+    });
+
+    await Promise.all([database.runQuery(DDBB.DEFAULT_JOBS_TABLE),database.runQuery(DDBB.DEFAULT_TAGS_TABLE)]);//ensures that the tables exist and if not creates them
+
+    deferred.resolve();
+
+  }catch(err){
+    console.log(chalk.red(err));
+  }
+  return deferred.promise;
+};
+
+
+
+//+++++++++++++++++++++++++++MAIN LOOP++++++++++++++++++++++++++
 const mainLoop = async function() {
 	var deferred = Q.defer();
-	//console.log(chalk.green("\nAwaiting serial..."));
 	while(true){	//En principi no ha de sortir mai d'aquí
 
     console.log(chalk.blue.bold("Looking for active job"));
+
 		var job = await database.getActiveJob();	//Gets the first active job found
     job = job[0]; //gets the job as a dictionary as the raw data is an array of one item but wiht the proises you gave to do it after getting the raw data [{id:1,name:....}] --> {id:1,name:....}
     console.log(chalk.blue("Found: " + job));
+
 		if (!_.isEmpty(job)){                   //if ther's a job:
 			console.log(chalk.green("Found active job:" + job.ref + " " + job.name + " " + job.qtydone + "/" + job.qty));
 
-      var rom = "D"; //Don not rom stickers for this job
-			if (job.rom == 1)		rom = "C"; //Rom stickers for this job
-			var r = await apiDevice.nfcSetRom(rom); //useless variable, only for the await
+      setRom(job);//says to the arduino if it has to rom or not
+
 			//Set first sticker on position:
 			console.log(chalk.green("First sticker in pre-position"));
 
-			while (job.qtydone < job.qty){
-				var actualjob = await database.getActiveJob(); // should be able to delete but its here for now
-				var start = Date.now();   //stores the start time to know how much it took later
+			while ( job.qtydone < job.qty ){
+			  var start = Date.now();   //stores the start time to know how much it took later
 				console.log(chalk.cyan("\tProcessing sticker " + (job.qtydone+1) + "/" + job.qty)); //infos the user of the progress made
 
 				var url = await apiTictapper.qrGun.getUrl();  //gets the url
@@ -120,7 +131,7 @@ const mainLoop = async function() {
 					//Comprovar si al log hi ha la url que anava a guardar, si coincideixen vol dir que la etiqueta ja estava gravada correctament i tancada i per tant continuar, else atura i no la comptabilitzis...
 
 					//tags should be an array of teh written tags and i an i++ variable to keep track of the tag we are doing and tst only that the urs exists in it
-					if (nfcWr.indexOf(tags[i].url)>=0){ //La url està ben desada
+					if (nfcWr.indexOf(tags[i].url) >= 0){ //La url està ben desada
             try {
               await insertTagToDB(job, start, nfcWr, url);
             }catch(err){
@@ -141,7 +152,6 @@ const mainLoop = async function() {
 	}
 	return deferred.promise;
 }
-
 
 //Export module
 module.exports = {initialize, mainLoop};
