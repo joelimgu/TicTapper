@@ -1,4 +1,4 @@
-# Tictapper v3 KONI version
+# Tictapper version V4
 
 This program used to insert URLS to NFS Stickers and relate their ids to the urls in a db.
 
