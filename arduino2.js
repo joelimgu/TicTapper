@@ -12,68 +12,68 @@ const delay = require('delay');
 const portName = "COM6";
 
 
-var port
-var parser
-var data = "";
-var conection
+class Arduino{
+  constructor(){
+    this.port
+    this.parser
+    this.data = "";
+    this.conection
+  }
 
+  async connect(portName, baudRate = 9600, autoOpen = true){
+    let deferred = Q.defer();
 
-async function connect(portName, baudRate = 9600, autoOpen = true){
-  let deferred = Q.defer();
+    this.port = new SerialPort(portName, {
+      autoOpen: autoOpen,
+      baudRate: baudRate,
+    });
 
-  port = new SerialPort(portName, {
-    autoOpen: autoOpen,
-    baudRate: baudRate,
-  });
+    this.parser = new Readline({delimeter: '\r\n' });
+    this.port.pipe(this.parser);
+    this._openListeners();
+    await this._testConnection();
 
-  parser = new Readline({delimeter: '\r\n' });
-  port.pipe(parser);
+    deferred.resolve();
+    return deferred.promise;
+  };
 
-  await testConnection();
+  async _openListeners(){
+    this.port.on('open', (msg) => {console.log(chalk.blue("Connecting to the Arduino"));});
+    this.parser.on("data", (msg) => {console.log("Arduino: " + msg);
+                                this.data = msg;
+                                });
+    this.port.on('error', (err) => {console.log(chalk.red(err));})
+  }
 
-  deferred.resolve();
-  return deferred.promise;
+  async _testConnection(){
+    let deferred = Q.defer();
+    let connected = false;
+    let i = 0;
+    do {
+      await delay(1000);
+      await this.sendData("?")
+      if (this.data.indexOf("?") >= 0){
+        connected = true;
+        deferred.resolve(i)
+      };
+      if (i > 10){
+        throw "Can't connect to the Arduino"
+      };
+      i++;
+    } while (!connected);
+    console.log(chalk.green('Connected to the arduino in '+ i + ' attemps'));
+    return deferred.promise;
+  };
+
+  sendData(msg){
+    this.port.write(msg + '\r');
+  }
+
 };
 
-
-async function testConnection(){
-	let deferred = Q.defer();
-  let connected = false;
-  let i = 0;
-  do {
-    await delay(1000);
-    await sendData("?")
-    if (data.indexOf("?") >= 0){
-      connected = true;
-      deferred.resolve(i)
-    };
-    if (i > 10){
-      throw "Can't connect to the Arduino"
-    };
-    i++;
-  } while (!connected);
-  console.log(chalk.green('Connected to the arduino in '+ i + ' attemps'));
-  return deferred.promise;
-};
-
-function sendData(msg){
-  port.write(msg + '\r');
-}
+// var arduino = new Arduino();
+// arduino.connect(portName, 9600, true).then((msg) => {console.log(chalk.green.bold("Arduino Connected"));})
 
 
 
-connect(portName, 9600, true).then((msg) => {console.log(chalk.green.bold("Arduino Connected"));})
-
-
-port.on('open', (msg) => {console.log(chalk.blue("Connecting to the Arduino"));});
-parser.on("data", (msg) => {console.log("Arduino: " + msg);
-                            data = msg;
-                            });
-port.on('error', (err) => {console.log(chalk.red(err));})
-
-
-function getData(){
-  return data;
-}
-
-module.exports = {sendData , connect, getData}//exports the
+module.exports = Arduino;//exports the

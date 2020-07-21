@@ -21,6 +21,7 @@ String command;                //Variable to receive RPI3 order
 String tagNdefUri = "";        //Variable to store the URL for TAG writing
 String response = "";          //Variable to store the response to RPI
 int romIt = 0;                 //Variable to determine to ROM or not to ROM: 1 -> ROM  0-> NO ROM
+String operationType = "";
 unsigned long timeToDetect;    //Variable to store the time it took to detect TAG
 unsigned long timeToIdentify;  //Variable to store the time it took to read TAG id
 unsigned long timeToRead;      //Variable to store the time it took to read a NDEF field
@@ -56,15 +57,19 @@ void writeURLToTag(){ //function called when a URL is passed through the USB to 
         if (romIt == 1){                          //ROM it or not:
           romTag();
           response = response + "RO**";               //Prepare response string RO => Read Only => SUCCESS AND ROMED
+          operationType = "RO";
         }else{
           response = response + "R**";                //Prepare response string R => Read => SUCCESS AND NO ROMED
+          operationType = "R";
         }
       }else{
         response = response + "RE**";                 //Prepare response string RE => Read Error
+        operationType = "RE";
       }
     }else{
       endOfWrite = millis();
       response = response + "WE**";                 //Prepare response string WE => Write Error
+      operationType = "WE";
     }
     timeToWrite = endOfWrite - start;
     /* TODO: ADD timing params: Time to identify, Time to Write, Time to Read, Try to get more info about the chip */
@@ -196,10 +201,10 @@ void setup(){
   Serial.flush();
   Serial.println("Arduino:nfc:Ready:*****");
 
-  /*
+ /*
   //JSON OBJECT CREATION
   const size_t capacity = JSON_OBJECT_SIZE(6);
-  StaticJsonDocument <256> doc;
+  StaticJsonDocument <512> doc;
   
   doc["tagID"] = "22aaee3344ff";
   doc["operationType"] = "RO";
@@ -222,12 +227,29 @@ void setup(){
   */
 };
 
+StaticJsonDocument <512> toJSON(){
+    //JSON OBJECT CREATION
+  const size_t capacity = JSON_OBJECT_SIZE(8);
+  StaticJsonDocument <512> doc;
 
+  doc["command"] = command;
+  doc["tagID"] = tagId;
+  doc["romIt"] = romIt;
+  doc["operationType"] = operationType;
+  doc["timeToDetect"] = timeToDetect;
+  doc["timeToIdentify"] = timeToIdentify;
+  doc["timeToRead"] = timeToRead;
+  doc["timeToWrite"] = timeToWrite;
+  serializeJson(doc, Serial);
+  return  doc;
+};
 
 void loop(){
 
  if(Serial.available()) {               //If serial port is available
-      Serial.println( Serial.readString();      //saves the input ( keep in mind if useing the arduino serial monitor it should be configured with no line ending)
+      Serial.println( Serial.readString());      //saves the input ( keep in mind if useing the arduino serial monitor it should be configured with no line ending)
+      serializeJson(toJSON(), Serial);
+      
     }
 
 /*

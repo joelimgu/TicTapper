@@ -3,9 +3,9 @@ var Database = require("./DatabaseClass");
 var setup = require("./setup.js");
 var Q = require("q");
 const delay = require('delay');
+const chalk = require('chalk');
 
-
-var arduino = require("./arduino2.js")
+var Arduino = require("./arduino2.js")
 
 //console.log(DDBB.DEFAULT_TAGS_TABLE);
 
@@ -44,6 +44,10 @@ var arduino = require("./arduino2.js")
 // }
 //
 // a().then((msg) => {console.log("c");})
-arduino.connect("COM6", 9600, true).then((msg) => {
-  console.log("data" + arduino.getData());
-})
+// arduino.connect("COM6", 9600, true).then((msg) => {
+//   console.log("data" + arduino.getData());
+// })
+
+
+var arduino = new Arduino();
+arduino.connect("COM6", 9600, true).then((msg) => {console.log(chalk.green.bold("Arduino Connected"));})
