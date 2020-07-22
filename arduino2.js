@@ -16,8 +16,7 @@ class Arduino{
   constructor(){
     this.port
     this.parser
-    this.data = "";
-    this.conection
+    this.data = "";//the arduino will returs a JSON and will be stored here
   }
 
   async connect(portName, baudRate = 9600, autoOpen = true){
@@ -39,8 +38,16 @@ class Arduino{
 
   async _openListeners(){
     this.port.on('open', (msg) => {console.log(chalk.blue("Connecting to the Arduino"));});
-    this.parser.on("data", (msg) => {console.log("Arduino: " + msg);
-                                this.data = msg;
+    this.parser.on("data", (msg = "") => {console.log("Arduino: " + msg);
+                                console.log("msg -> " + msg);
+                                if (msg){
+                                  try{
+                                    this.data = JSON.parse(msg);
+                                    console.log("JSON -> " + this.data.command);
+                                  }catch(err){
+                                    console.log("error recieving arduino data" + err);
+                                  }
+                                }
                                 });
     this.port.on('error', (err) => {console.log(chalk.red(err));})
   }
@@ -52,21 +59,26 @@ class Arduino{
     do {
       await delay(1000);
       await this.sendData("?")
-      if (this.data.indexOf("?") >= 0){
-        connected = true;
-        deferred.resolve(i)
+      try{
+        if (this.data.command.indexOf("?") >= 0){
+          connected = true;
+          deferred.resolve(i)
+        };
+      }catch{
+        
       };
       if (i > 10){
-        throw "Can't connect to the Arduino"
-      };
+      throw "Can't connect to the Arduino"
       i++;
+      }
     } while (!connected);
     console.log(chalk.green('Connected to the arduino in '+ i + ' attemps'));
     return deferred.promise;
   };
 
   sendData(msg){
-    this.port.write(msg + '\r');
+    this.port.write(msg);
+    console.log(msg);
   }
 
 };

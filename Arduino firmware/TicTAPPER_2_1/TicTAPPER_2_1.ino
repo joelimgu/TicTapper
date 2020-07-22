@@ -199,7 +199,7 @@ void setup(){
   Serial.begin(BAUDRATE);                 //Set the speed of the communication with RPI3
   while (!Serial) { }                     // wait for serial port to connect. Needed for native USB
   Serial.flush();
-  Serial.println("Arduino:nfc:Ready:*****");
+  //Serial.println("Arduino:nfc:Ready:*****");
 
  /*
   //JSON OBJECT CREATION
@@ -227,11 +227,10 @@ void setup(){
   */
 };
 
-StaticJsonDocument <512> toJSON(){
-    //JSON OBJECT CREATION
-  const size_t capacity = JSON_OBJECT_SIZE(8);
-  StaticJsonDocument <512> doc;
-
+void sendJSON(){
+  //JSON OBJECT CREATION
+  StaticJsonDocument <512> doc; //creates the JSON file using theArduinoJson libary
+  
   doc["command"] = command;
   doc["tagID"] = tagId;
   doc["romIt"] = romIt;
@@ -241,32 +240,24 @@ StaticJsonDocument <512> toJSON(){
   doc["timeToRead"] = timeToRead;
   doc["timeToWrite"] = timeToWrite;
   serializeJson(doc, Serial);
-  return  doc;
+  Serial.print("\r\n");
 };
 
 void loop(){
-
- if(Serial.available()) {               //If serial port is available
-      Serial.println( Serial.readString());      //saves the input ( keep in mind if useing the arduino serial monitor it should be configured with no line ending)
-      serializeJson(toJSON(), Serial);
-      
-    }
-
-/*
- command = "";
- readSerialString();
-
-  if (command.indexOf("https")>=0){        //Write the tag
-    writeURLToTag();
-  }
-
-  if (command == "C"){   //Set ROM -> Tanca les etiquetes
-    romIt = 1;
-    Serial.println("ROK*****");  //Rom enable
-  }
-
-  if (command == "D"){   //UnSet ROM -> NO tanquis les etiquetes
-    romIt = 0;
-    Serial.println("RKO*****");  //Rom disabled
-  }*/
+  command = "";
+  if(Serial.available()) {               //If serial port is available
+      command = Serial.readString();
+      Serial.println(command + "\r\n");
+      if (command.indexOf("https")>=0){        //Write the tag  
+        writeURLToTag();
+      }
+      if (command == "D"){   //UnSet ROM -> NO tanquis les etiquetes
+        romIt = 0;  //Rom disabled
+      } else if (command == "C"){   //Set ROM -> Tanca les etiquetes
+         romIt = 1; //Rom enable
+      }
+      sendJSON();//prints the JSON string to the serial port
+  };
+  //sendJSON();
+  delay(100);
 };
