@@ -16,7 +16,7 @@ function arduino(setup){
 	this.setup = setup;
 	this.port = new SerialPort(setup.port, { baudRate: setup.bauds, autoOpen: false } );//Sets the port and bitrate of the connection to the arduino
 	//parser = this.port.pipe(new Readline({ delimiter: '\n' }));
-	parser = this.port.pipe(new Readline({ delimiter: '*****\r' })); //I don't know what this does?????
+	parser = this.port.pipe(new Readline({ delimiter: '*****\r' }));//creates the parser(interprets the raw data into the string we want) and the delimeter tells it where is the end of the data
 
 	this.eventEmitter = new events.EventEmitter();
 	var emitter = this.eventEmitter;

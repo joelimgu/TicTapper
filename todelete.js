@@ -5,7 +5,7 @@ var Q = require("q");
 const delay = require('delay');
 const chalk = require('chalk');
 
-var Arduino = require("./arduino2.js")
+//var Arduino = require("./arduino2.js")
 
 //console.log(DDBB.DEFAULT_TAGS_TABLE);
 
@@ -49,10 +49,10 @@ var Arduino = require("./arduino2.js")
 // })
 
 
-var arduino = new Arduino();
-arduino.connect("COM6", 9600, true).then((msg) => {console.log(chalk.green.bold("Arduino Connected"));})
-//setTimeout(function(){arduino.sendData("Hola")},3000);
-
-var a = ` {"command":"Hola","tagID":"","romIt":0,"operationType":"","timeToDetect":0,"timeToIdentify":0,"timeToRead":0,"timeToWrite":0}\r\n`
-b = JSON.parse(a);
-console.log(a);
+// var arduino = new Arduino();
+// arduino.connect("COM6", 9600, true).then((msg) => {console.log(chalk.green.bold("Arduino Connected"));})
+// //setTimeout(function(){arduino.sendData("Hola")},3000);
+//
+// var a = ` {"command":"Hola","tagID":"","romIt":0,"operationType":"","timeToDetect":0,"timeToIdentify":0,"timeToRead":0,"timeToWrite":0}\r\n`
+// b = JSON.parse(a);
+// console.log(a);

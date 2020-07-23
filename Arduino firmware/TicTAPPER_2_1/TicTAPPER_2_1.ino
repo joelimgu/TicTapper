@@ -200,6 +200,7 @@ void setup(){
   while (!Serial) { }                     // wait for serial port to connect. Needed for native USB
   Serial.flush();
   //Serial.println("Arduino:nfc:Ready:*****");
+  Serial.println(" ");
 
  /*
   //JSON OBJECT CREATION

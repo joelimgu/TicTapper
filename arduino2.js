@@ -13,42 +13,60 @@ const portName = "COM6";
 
 
 class Arduino{
-  constructor(){
-    this.port
-    this.parser
-    this.data = "";//the arduino will returs a JSON and will be stored here
-    this.eventEmitter = new events.EventEmitter();
-  }
-
-  async connect(portName, baudRate = 9600, autoOpen = true){
+  async connect(port, baudRate = 9600, autoOpen = true){ //connects to the arduino adn resolves when the conection is done
     let deferred = Q.defer();
+    this.portName = port;
+    this.baudRate = baudRate;
 
-    this.port = new SerialPort(portName, {
-      autoOpen: autoOpen,
-      baudRate: baudRate,
-    });
+    this.port =  new SerialPort(port, { baudRate: baudRate, autoOpen: autoOpen } );//Sets the port and bitrate of the connection to the arduino
 
-    this.parser = new Readline({delimeter: '\r\n' });
-    this.port.pipe(this.parser);
-    this._openListeners();
-    //await this._testConnection();
+    this.parser =  this.port.pipe(new Readline({ delimiter: '\r\n' }));//creates the parser( the interpreter of the arduino msg as a one single string not seperate things)
+    await this._openListeners();
 
     deferred.resolve();
     return deferred.promise;
-  };
 
-  async _openListeners(){
-    this.eventEmitter.on('done', (msg) => {console.log("done");})
-    this.port.on('open', (msg) => {console.log(chalk.blue("Connecting to the Arduino"));});
-    this.parser.on("data", (msg = "") => {console.log("Arduino: " + msg);
-                                this.eventEmitter.emit('done', msg);
-                                });
-    this.port.on('error', (err) => {console.log(chalk.red(err));})
   }
-}
 
-// var arduino = new Arduino();
-// arduino.connect(portName, 9600, true).then((msg) => {console.log(chalk.green.bold("Arduino Connected"));})
+  _openListeners(time = 5000){
+    let deferred = Q.defer();
+    let isDone = false;
+    setTimeout(this._conectionTimeout, time, isDone, time);
+
+
+    this.port.on('open', function(){
+  		console.log(chalk.green("Opening serial on port "+this.port+" at "+this.baudRate));
+  	});
+
+    this.port.once('error', function(err){
+      console.log(chalk.red.bold("An error has occured while connecting to the arduino: " + err));
+    });
+
+
+    this.parser.on('data',function(data){
+      console.log(chalk.gray("-> " + data));
+      deferred.resolve(data);
+      isDone = true;
+      console.log("dta");
+    });
+
+    return deferred.promise;
+  }
+
+  _conectionTimeout(isDone, time = "NA") {
+    let deferred = Q.defer();
+    console.log("timeoutut");
+    console.log(isDone);
+    if (!isDone) throw "Conextion timeout t = " + time/1000 + "s when connecting to the arduino";
+    else deferred.resolve();
+    return deferred.pormise;
+  };
+};
+
+var a = new Arduino();
+a.connect(portName, 9600).then((msg) => {
+  console.log("connected");
+})
 
 
 
