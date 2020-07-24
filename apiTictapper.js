@@ -2,20 +2,25 @@ var Q = require("q");
 const chalk = require('chalk');
 var setup = require('./setup');
 var _ = require('lodash');
-const readlineSync = require('readline-sync');
-var replaceall = require('replaceall');
 var apiQRGun = require("./apiQRGun.js");
 var DDBB = require("./DDBB.js");
 var Database = require("./DatabaseClass");
 var Arduino = require ("./ArduinoClass")
+const delay = require('delay');
+const logUpdate = require('log-update');
 
-
+const frames = ['-', '\\', '|', '/']; // used to create the loading animation in the looking for active job
 var database
 var arduino
 var apiTictapper = {
 	qrGun: new apiQRGun()
 };
 
+
+function loadingAnimationForCearchingJobs(i){
+	frame = frames[i%4]
+  logUpdate(chalk.blue.bold(`Looking for active job (${frame})`));
+}
 
 //++++++++++++++++++++++++++++++INSERT TAG TO DB+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 function createTagObj(job, nfcWr, speed){
@@ -54,10 +59,10 @@ const initialize = async function(){
   let deferred = Q.defer();
   try {//easier to use try catch with the awaits
     database = await new Database(setup.sql.database, "jobs", "tags");//created the db object to interact with the db
-		arduino = await new Arduino();
-		let arduinoSetup = setup.antenna_a;
+		arduino = await new Arduino(); // creates the arduino object
+		let arduinoSetup = setup.antenna_a;// saves the satup info for the arduino, only for easier redability later, no necessary
     await Promise.all([arduino.connect(arduinoSetup.port, arduinoSetup.bauds), database.connect(setup.sql)]).then((msg) => { //connects to the database and creates the connections to the arduino
-          console.log(chalk.green("->" + msg[0]));
+          console.log(chalk.green("-> Arduino " + msg[0]));
           console.log(chalk.green("-> Database " + msg[1]));
     });
 
@@ -76,15 +81,19 @@ const initialize = async function(){
 //+++++++++++++++++++++++++++MAIN LOOP++++++++++++++++++++++++++
 const mainLoop = async function() {
 	var deferred = Q.defer();
+	let N = 0;
 	while(true){	//En principi no ha de sortir mai d'aquí
 
-    console.log(chalk.blue.bold("Looking for active job"));
 
+		N++;
+		loadingAnimationForCearchingJobs(N);
+		
 		var job = await database.getActiveJob();	//Gets the first active job found
     job = job[0]; //gets the job as a dictionary as the raw data is an array of one item but wiht the proises you gave to do it after getting the raw data [{id:1,name:....}] --> {id:1,name:....}
-    console.log(chalk.blue("Found: " + job));
+
 
 		if (!_.isEmpty(job)){                   //if ther's a job:
+			console.log(chalk.blue("Found: " + job));
 			console.log(chalk.green("Found active job:" + job.ref + " " + job.name + " " + job.qtydone + "/" + job.qty));
 
       setRom(job);//says to the arduino if it has to rom or not
@@ -138,6 +147,7 @@ const mainLoop = async function() {
 		//2.3- tell arduino to write & Rom the decoded url
 		//2.4- save data to DDBB
 		//2.5- Goto 2.
+		await delay(1000);
 	}
 	return deferred.promise;
 }

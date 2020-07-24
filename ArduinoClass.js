@@ -7,7 +7,6 @@ const Readline = require('@serialport/parser-readline');
 const chalk = require('chalk');
 var digestLog = require("./digestLog.js");
 var setup = require("./setup.js");
-const delay = require('delay');
 
 const portName = "COM6";
 
@@ -23,7 +22,7 @@ class Arduino {
     this.parser =  this.port.pipe(new Readline({ delimiter: '\r\n' }));//creates the parser( the interpreter of the arduino msg as a one single string not seperate things)
     await this._openListeners(); // creates all the event listeners for the data, open and error events of the arduino
 
-    deferred.resolve();
+    deferred.resolve("connected");
     return deferred.promise;
 
   }

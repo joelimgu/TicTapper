@@ -5,6 +5,9 @@ var Q = require("q");
 const delay = require('delay');
 const chalk = require('chalk');
 
+const readline = require('readline')
+
+const logUpdate = require('log-update');
 //var Arduino = require("./arduino2.js")
 
 //console.log(DDBB.DEFAULT_TAGS_TABLE);
@@ -56,3 +59,24 @@ const chalk = require('chalk');
 // var a = ` {"command":"Hola","tagID":"","romIt":0,"operationType":"","timeToDetect":0,"timeToIdentify":0,"timeToRead":0,"timeToWrite":0}\r\n`
 // b = JSON.parse(a);
 // console.log(a);
+
+const frames = ['-', '\\', '|', '/'];
+
+function printProgress(i){
+  frame = frames[i%4]
+  logUpdate(
+  `
+          ♥♥
+     ${frame} unicorns ${frame}
+          ♥♥
+  `)
+}
+var i =0;
+async function a(){
+while (true){
+  i++;
+  printProgress(i)
+  await delay(500);
+}}
+
+a();
