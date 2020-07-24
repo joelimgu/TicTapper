@@ -27,7 +27,7 @@ async function insertTagToDB(job, start, nfcWr, url){
 	var tagObj = {
 		job_id: job.id,
 		url: url,
-		uid: nfcWR.tagID,
+		uid: nfcWr.tagID,
 		status: "Success",
 		timespent: speed,
 		timeToDetect: tagID.timeToDetect,
