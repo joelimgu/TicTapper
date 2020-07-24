@@ -18,7 +18,7 @@ var apiTictapper = {
 
 
 //++++++++++++++++++++++++++++++INSERT TAG TO DB+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-async function createTagObj(job, start, nfcWr, url){
+function createTagObj(job, start, nfcWr){
   let deferred = Q.defer();
 
 	var speed = (Date.now()-start);
@@ -26,7 +26,7 @@ async function createTagObj(job, start, nfcWr, url){
 
 	var tagObj = {
 		job_id: job.id,
-		url: url,
+		url: nfcWr.url,
 		uid: nfcWr.tagID,
 		status: "Success",
 		timespent: speed,
@@ -38,7 +38,7 @@ async function createTagObj(job, start, nfcWr, url){
 		created_at: Date.now()
 	};
 
-  deferred.resolve();
+  deferred.resolve(tagObj);
   return deferred.promise;
 };
 
@@ -106,9 +106,7 @@ const mainLoop = async function() {
 					var nfcWr = await arduino.write(url) //writes the url to the tag and returns a dictionary with all the operation info
 				}catch(err){
 					console.log(chalk.red.bold("an error has accurred while writing the NFC tag: " + err));
-
 				}
-
 
         try {
 					job.qtydone++;
@@ -117,7 +115,7 @@ const mainLoop = async function() {
 						job.status = "stop";
 					};
 
-          let tagObj = await createTagObj(job, start, nfcWr, url);  //stores the tag in the db
+          let tagObj = await createTagObj(job, start, nfcWr);  //stores the tag in the db
 
 					await Promise.all([database.insertTag(tagObj), database.updateJobQty(job)]).then((msg) => {deferred.resolve(job)}).catch((err) => {throw err});
 
