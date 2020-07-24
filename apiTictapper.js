@@ -18,20 +18,18 @@ var apiTictapper = {
 
 
 //++++++++++++++++++++++++++++++INSERT TAG TO DB+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-function createTagObj(job, nfcWr, speed, left){
+function createTagObj(job, nfcWr, speed){
   let deferred = Q.defer();
-
-
 
 	var tagObj = {
 		job_id: job.id,
-		url: nfcWr.url,
+		url: nfcWr.command,
 		uid: nfcWr.tagID,
 		status: "Success",
 		timespent: speed,
 		timeToDetect: nfcWr.timeToDetect,
 		timeToIdentify: nfcWr.timeToIdentify,
-		timeToRead: nfcWr.nfcWr,
+		timeToRead: nfcWr.timeToRead,
 		timeToWrite: nfcWr.timeToWrite,
 		datum: null,
 		created_at: Date.now()
@@ -117,8 +115,9 @@ const mainLoop = async function() {
 					var speed = (Date.now()-start);
 					var left = job.qty - job.qtydone;
 
-          let tagObj = await createTagObj(job, nfcWr, speed, left);  //stores the tag in the db
+          let tagObj = await createTagObj(job, nfcWr, speed);  //saves all the tag info on a dictionary to be used by a query to inser it to th db
 
+					//saves the tag into th db and updates the active job
 					await Promise.all([database.insertTag(tagObj), database.updateJobQty(job)]).then((msg) => {deferred.resolve(job)}).catch((err) => {throw err});
 
 				  console.log("\t" + chalk.green("-> Success. Speed: " + speed + " ms. Finishing job in " + ((speed*left)/1000) + " seconds."));
