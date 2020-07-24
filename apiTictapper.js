@@ -47,7 +47,7 @@ async function insertTagToDB(job, start, nfcWr, url){
 function setRom(job){ //sets the rom of the arduino
   let rom = "D"; //Don not rom stickers for this job
   if (job.rom == 1)		rom = "C"; //Rom stickers for this job
-	arduino.write(rom).then().catch((err) => console.log(chalk.red.bold(err));)
+	arduino.write(rom).then().catch((err) => {console.log(chalk.red.bold(err));})
 };
 
 
