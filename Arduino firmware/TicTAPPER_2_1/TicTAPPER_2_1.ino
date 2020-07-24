@@ -17,7 +17,7 @@ NfcAdapter nfc = NfcAdapter(pn532spi);     //Setup nfc drivers
 //GLOBALS
 //NFC variables
 String tagId = "";             //Variable for TAG NFC ID value
-String command;                //Variable to receive RPI3 order
+String command = "";                //Variable to receive RPI3 order
 String tagNdefUri = "";        //Variable to store the URL for TAG writing
 String response = "";          //Variable to store the response to RPI
 int romIt = 0;                 //Variable to determine to ROM or not to ROM: 1 -> ROM  0-> NO ROM
@@ -200,8 +200,8 @@ void setup(){
   while (!Serial) { }                     // wait for serial port to connect. Needed for native USB
   Serial.flush();
   //Serial.println("Arduino:nfc:Ready:*****");
-  Serial.println(" ");
-
+  //Serial.println(" ");
+  sendJSON();
  /*
   //JSON OBJECT CREATION
   const size_t capacity = JSON_OBJECT_SIZE(6);
@@ -248,7 +248,6 @@ void loop(){
   command = "";
   if(Serial.available()) {               //If serial port is available
       command = Serial.readString();
-      Serial.println(command + "\r\n");
       if (command.indexOf("https")>=0){        //Write the tag  
         writeURLToTag();
       }
@@ -260,5 +259,5 @@ void loop(){
       sendJSON();//prints the JSON string to the serial port
   };
   //sendJSON();
-  delay(100);
+  delay(10);
 };

@@ -5,7 +5,7 @@ API to deal with Arduinos, all methods are promises
 var Q = require("q");
 var arduino = require("./arduino.js");
 var setup = require('./setup');
-
+var Arduino = require ("./ArduinoClass")
 
 var apiDevice = {
 	nfc: new arduino(setup.antenna_a)

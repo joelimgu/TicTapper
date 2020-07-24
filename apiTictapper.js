@@ -1,18 +1,17 @@
 var Q = require("q");
-var apiDevice = require("./apiDevice.js");
 const chalk = require('chalk');
 var setup = require('./setup');
-//var apiSql = require("./sql.js");
 var _ = require('lodash');
 const readlineSync = require('readline-sync');
 var replaceall = require('replaceall');
 var apiQRGun = require("./apiQRGun.js");
 var DDBB = require("./DDBB.js");
 var Database = require("./DatabaseClass");
+var Arduino = require ("./ArduinoClass")
 
 
 var database
-
+var arduino
 var apiTictapper = {
 	qrGun: new apiQRGun()
 };
@@ -22,39 +21,23 @@ var apiTictapper = {
 async function insertTagToDB(job, start, nfcWr, url){
   let deferred = Q.defer();
 
-	job.qtydone++;
 	var speed = (Date.now()-start);
 	var left = job.qty - job.qtydone;
-	var auxnfcWr = nfcWr;
-	var auxNfc = nfcWr.split("**");
 
-	if (job.qtydone == job.qty){
-		job.status = "stop";
-	};
-			//22aaee3344ff**RO**122**211**432**223
-			//uid -> id xip NFC ** (readonly(RO),readOk(R),readError(RE),qwriteError(WE)) ** .....
-															//en relaitat es write and rom pero es RO....
 	var tagObj = {
 		job_id: job.id,
 		url: url,
-		uid: auxNfc[0],
+		uid: nfcWR.tagID,
 		status: "Success",
 		timespent: speed,
-		timeToDetect: auxNfc[2],
-		timeToIdentify: auxNfc[3],
-		timeToRead: auxNfc[4],
-		timeToWrite: auxNfc[5],
-		datum: auxnfcWr,
+		timeToDetect: tagID.timeToDetect,
+		timeToIdentify: nfcWr.timeToIdentify,
+		timeToRead: nfcWr.nfcWr,
+		timeToWrite: nfcWr.timeToWrite,
+		datum: null,
 		created_at: Date.now()
 	};
 
-  await Promise.all([database.insertTag(tagObj), database.updateJobQty(job)]).then((msg) => {deferred.resolve(job)}).catch((err) => {throw err});
-
-  console.log("\t" + chalk.green("-> Success. Speed: " + speed + " ms. Finishing job in " + ((speed*left)/1000) + " seconds."));
-
-	if (job.status == "stop"){ //infos the user that the job has been finished ( should add a log aftes the while to inform the end)
-		console.log(chalk.green("Job " + job.name + " Finished."));
-	};
   deferred.resolve();
   return deferred.promise;
 };
@@ -64,7 +47,7 @@ async function insertTagToDB(job, start, nfcWr, url){
 function setRom(job){ //sets the rom of the arduino
   let rom = "D"; //Don not rom stickers for this job
   if (job.rom == 1)		rom = "C"; //Rom stickers for this job
-  let r = apiDevice.nfcSetRom(rom); //useless variable, only for the await
+	arduino.write(rom);
 };
 
 
@@ -74,8 +57,9 @@ const initialize = async function(){
   let deferred = Q.defer();
   try {//easier to use try catch with the awaits
     database = await new Database(setup.sql.database, "jobs", "tags");//created the db object to interact with the db
-
-    await Promise.all([apiDevice.connectDevices(), database.connect(setup.sql)]).then((msg) => { //connects to the database and creates the connections to the arduino
+		arduino = await new Arduino();
+		let arduinoSetup = setup.antenna_a;
+    await Promise.all([arduino.connect(arduinoSetup.port, arduinoSetup.bauds), database.connect(setup.sql)]).then((msg) => { //connects to the database and creates the connections to the arduino
           console.log(chalk.green("->" + msg[0]));
           console.log(chalk.green("-> Database " + msg[1]));
     });
@@ -117,11 +101,27 @@ const mainLoop = async function() {
 
 				var url = await apiTictapper.qrGun.getUrl();  //gets the url
 
-				var nfcWr = await apiDevice.nfcWrite(url);  //writes the url
+				//var nfcWr = await apiDevice.nfcWrite(url);  //writes the url
+				var nfcWr = await arduino.write(url) //writes the url to the tag and returns a dictionary with all the operation info
 
 				if ((nfcWr.indexOf("error")<0) && ((nfcWr.indexOf("Error"))<0) ) {
           try {
+						job.qtydone++;
+
+						if (job.qtydone == job.qty){
+							job.status = "stop";
+						};
+
             await insertTagToDB(job, start, nfcWr, url);  //stores the tag in the db
+
+						await Promise.all([database.insertTag(tagObj), database.updateJobQty(job)]).then((msg) => {deferred.resolve(job)}).catch((err) => {throw err});
+
+					  console.log("\t" + chalk.green("-> Success. Speed: " + speed + " ms. Finishing job in " + ((speed*left)/1000) + " seconds."));
+
+						if (job.status == "stop"){ //infos the user that the job has been finished ( should add a log aftes the while to inform the end)
+							console.log(chalk.green("Job " + job.name + " Finished."));
+						};
+
           }catch(err){
               console.log(chalk.red("An error has occured : " + err));
           };
