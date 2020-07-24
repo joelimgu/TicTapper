@@ -39,6 +39,9 @@ class Arduino {
       console.log(chalk.red.bold("An error has occured while connecting to the arduino: " + err));
     });
 
+    this.parser.once('data', function(msg){
+      deferred.resolve(this.data);
+    })
 
     this.parser.on('data',function(msg){ // recieves the data from the arduino and tries to save it as  a dictionary
       console.log(chalk.gray("-> " + msg));
@@ -48,9 +51,7 @@ class Arduino {
       }catch(err){
         console.log("Arduino didns send a JSON, insted send : '" + msg +"' ");
         this.data = "";
-      }
-
-      deferred.resolve(this.data);
+      };
     });
 
     return deferred.promise;

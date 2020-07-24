@@ -77,7 +77,7 @@ void writeURLToTag(){ //function called when a URL is passed through the USB to 
     response = response + timeToIdentify + "**";                 //Prepare response Time to Read tag in miliseconds
     response = response + timeToRead + "**";                 //Prepare response Time to Read tag in miliseconds
     response = response + timeToWrite + "**";                 //Prepare response Time to write tag in miliseconds
-    Serial.println(response + "***");
+    //Serial.println(response + "***");
 }
 
 /************************************* NFC METHODS ******************************/
@@ -190,7 +190,7 @@ void writeURL(){
     response = response + timeToIdentify + "**";                 //Prepare response Time to Read tag in miliseconds
     response = response + timeToRead + "**";                 //Prepare response Time to Read tag in miliseconds
     response = response + timeToWrite + "**";                 //Prepare response Time to write tag in miliseconds
-    Serial.println(response + "***");
+    //Serial.println(response + "***");
 }
 
 void setup(){

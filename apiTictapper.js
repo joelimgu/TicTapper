@@ -47,7 +47,7 @@ async function insertTagToDB(job, start, nfcWr, url){
 function setRom(job){ //sets the rom of the arduino
   let rom = "D"; //Don not rom stickers for this job
   if (job.rom == 1)		rom = "C"; //Rom stickers for this job
-	arduino.write(rom);
+	arduino.write(rom).then().catch((err) => console.log(chalk.red.bold(err));)
 };
 
 
@@ -102,7 +102,11 @@ const mainLoop = async function() {
 				var url = await apiTictapper.qrGun.getUrl();  //gets the url
 
 				//var nfcWr = await apiDevice.nfcWrite(url);  //writes the url
-				var nfcWr = await arduino.write(url) //writes the url to the tag and returns a dictionary with all the operation info
+				try{
+					var nfcWr = await arduino.write(url) //writes the url to the tag and returns a dictionary with all the operation info
+				}catch(err){
+					console.log(chalk.red.bold(err));
+				}
 
 				if ((nfcWr.indexOf("error")<0) && ((nfcWr.indexOf("Error"))<0) ) {
           try {
