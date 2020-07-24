@@ -105,46 +105,31 @@ const mainLoop = async function() {
 				try{
 					var nfcWr = await arduino.write(url) //writes the url to the tag and returns a dictionary with all the operation info
 				}catch(err){
-					console.log(chalk.red.bold(err));
+					console.log(chalk.red.bold("an error has accurred while writing the NFC tag: " + err));
+
 				}
 
-				if ((nfcWr.indexOf("error")<0) && ((nfcWr.indexOf("Error"))<0) ) {
-          try {
-						job.qtydone++;
 
-						if (job.qtydone == job.qty){
-							job.status = "stop";
-						};
+        try {
+					job.qtydone++;
 
-            await insertTagToDB(job, start, nfcWr, url);  //stores the tag in the db
+					if (job.qtydone == job.qty){
+						job.status = "stop";
+					};
 
-						await Promise.all([database.insertTag(tagObj), database.updateJobQty(job)]).then((msg) => {deferred.resolve(job)}).catch((err) => {throw err});
+          await insertTagToDB(job, start, nfcWr, url);  //stores the tag in the db
 
-					  console.log("\t" + chalk.green("-> Success. Speed: " + speed + " ms. Finishing job in " + ((speed*left)/1000) + " seconds."));
+					await Promise.all([database.insertTag(tagObj), database.updateJobQty(job)]).then((msg) => {deferred.resolve(job)}).catch((err) => {throw err});
 
-						if (job.status == "stop"){ //infos the user that the job has been finished ( should add a log aftes the while to inform the end)
-							console.log(chalk.green("Job " + job.name + " Finished."));
-						};
+				  console.log("\t" + chalk.green("-> Success. Speed: " + speed + " ms. Finishing job in " + ((speed*left)/1000) + " seconds."));
 
-          }catch(err){
-              console.log(chalk.red("An error has occured : " + err));
-          };
+					if (job.status == "stop"){ //infos the user that the job has been finished ( should add a log aftes the while to inform the end)
+						console.log(chalk.green("Job " + job.name + " Finished."));
+					};
 
-				}else{	//An error ocurred while writing NFC
-					console.log("\t"+chalk.red("-> Error: NFC. "+digestLog.nfcLog(nfcWr)));
-					//Comprovar si al log hi ha la url que anava a guardar, si coincideixen vol dir que la etiqueta ja estava gravada correctament i tancada i per tant continuar, else atura i no la comptabilitzis...
-
-					//tags should be an array of teh written tags and i an i++ variable to keep track of the tag we are doing and tst only that the urs exists in it
-					if (nfcWr.indexOf(tags[i].url) >= 0){ //La url està ben desada
-            try {
-              await insertTagToDB(job, start, nfcWr, url);
-            }catch(err){
-                console.log(chalk.red("An error has occured : " + err)); //stores the tag done in db
-            };
-					}else{
-						var ans = readlineSync.question('\t -> Solve the issue and press enter to continue');
-					}
-				}
+        }catch(err){
+            console.log(chalk.red("An error has occured : " + err));
+        };
 			}
 		}
 		//2- While job active:
