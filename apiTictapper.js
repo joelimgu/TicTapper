@@ -103,7 +103,7 @@ const mainLoop = async function() {
 
 			while ( job.qtydone < job.qty ){
 			  let start = Date.now();   //stores the start time to know how much it took later
-				console.log(chalk.green("Put the first sticker in the NFC pad and scan the qr code to continue"));
+				console.log(chalk.cyan.bold("Put the first sticker in the NFC pad and scan the qr code to continue"));
 				console.log(chalk.cyan("\tProcessing sticker " + (job.qtydone+1) + "/" + job.qty)); //infos the user of the progress made
 
 				let url = await apiTictapper.qrGun.getUrl();  //gets the url
