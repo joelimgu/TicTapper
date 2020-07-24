@@ -17,7 +17,7 @@ var apiTictapper = {
 };
 
 
-function loadingAnimationForCearchingJobs(i){
+function loadingAnimationForCearchingJobs(i){//animates the porcess of searching an active job in the database
 	frame = frames[i%4]
   logUpdate(chalk.blue.bold(`Looking for active job (${frame})`));
 }
@@ -87,7 +87,7 @@ const mainLoop = async function() {
 
 		N++;
 		loadingAnimationForCearchingJobs(N);
-		
+
 		var job = await database.getActiveJob();	//Gets the first active job found
     job = job[0]; //gets the job as a dictionary as the raw data is an array of one item but wiht the proises you gave to do it after getting the raw data [{id:1,name:....}] --> {id:1,name:....}
 
