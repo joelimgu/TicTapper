@@ -71,6 +71,7 @@ void writeURLToTag(){ //function called when a URL is passed through the USB to 
       response = response + "WE**";                 //Prepare response string WE => Write Error
       operationType = "WE";
     }
+    
     timeToWrite = endOfWrite - start;
     /* TODO: ADD timing params: Time to identify, Time to Write, Time to Read, Try to get more info about the chip */
     response = response + timeToDetect + "**";                 //Prepare response Time to Read tag in miliseconds
@@ -81,9 +82,6 @@ void writeURLToTag(){ //function called when a URL is passed through the USB to 
 }
 
 /************************************* NFC METHODS ******************************/
-void readNFCTagId(){
-
-}
 /*
 void waitUntilTagIsDetected(){
   int timeout=0;
@@ -185,7 +183,7 @@ void writeURL(){
     }
     timeToWrite = endOfWrite - start;
     /* TODO: ADD timing params: Time to identify, Time to Write, Time to Read, Try to get more info about the chip */
-    response = response + tagId + "**";              //Prepare response string idTag**
+    /*response = response + tagId + "**";              //Prepare response string idTag**
     response = response + timeToDetect + "**";                 //Prepare response Time to Read tag in miliseconds
     response = response + timeToIdentify + "**";                 //Prepare response Time to Read tag in miliseconds
     response = response + timeToRead + "**";                 //Prepare response Time to Read tag in miliseconds
