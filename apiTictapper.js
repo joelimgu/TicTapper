@@ -99,11 +99,11 @@ const mainLoop = async function() {
       setRom(job);//says to the arduino if it has to rom or not
 
 			//Set first sticker on position:
-			console.log(chalk.green("First sticker in pre-position"));
+			//console.log(chalk.green("Put the first sticker in the NFC pad and scan the qr code to continue"));
 
 			while ( job.qtydone < job.qty ){
 			  let start = Date.now();   //stores the start time to know how much it took later
-
+				console.log(chalk.green("Put the first sticker in the NFC pad and scan the qr code to continue"));
 				console.log(chalk.cyan("\tProcessing sticker " + (job.qtydone+1) + "/" + job.qty)); //infos the user of the progress made
 
 				let url = await apiTictapper.qrGun.getUrl();  //gets the url
