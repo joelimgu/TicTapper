@@ -59,24 +59,29 @@ const logUpdate = require('log-update');
 // var a = ` {"command":"Hola","tagID":"","romIt":0,"operationType":"","timeToDetect":0,"timeToIdentify":0,"timeToRead":0,"timeToWrite":0}\r\n`
 // b = JSON.parse(a);
 // console.log(a);
+//
+// const frames = ['-', '\\', '|', '/'];
+//
+// function printProgress(i){
+//   frame = frames[i%4]
+//   logUpdate(
+//   `
+//           ♥♥
+//      ${frame} unicorns ${frame}
+//           ♥♥
+//   `)
+// }
+// var i =0;
+// async function a(){
+// while (true){
+//   i++;
+//   printProgress(i)
+//   await delay(500);
+// }}
+//
+// a();
 
-const frames = ['-', '\\', '|', '/'];
 
-function printProgress(i){
-  frame = frames[i%4]
-  logUpdate(
-  `
-          ♥♥
-     ${frame} unicorns ${frame}
-          ♥♥
-  `)
-}
-var i =0;
-async function a(){
-while (true){
-  i++;
-  printProgress(i)
-  await delay(500);
-}}
 
-a();
+//INSERT INTO jobs(`name`,ref,pre_url,uid_len,qty,qtydone,rom,`status`,modified_at)
+ //VALUES('TS0000','TS0000','https://tictap.me/track/',10,10,0,0,'start',0);
