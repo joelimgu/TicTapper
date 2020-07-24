@@ -33,7 +33,7 @@ class Database {                             //class to create a db to CRUD
     this.connectedDB = mysql.createConnection(info);  //creates the connection using the info
     this.connectedDB.connect(function(err) {              //actualy connects to the db
       if (err) { throw err;};
-      console.log(chalk.green("Connected!"));              //info to the "user"
+      console.log(chalk.green("Connected to " + info.database));              //info to the "user"
       deferred.resolve("Connected");                       //resolves the promise if thers no errors
     });
     return deferred.promise;

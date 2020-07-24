@@ -93,10 +93,11 @@ const mainLoop = async function() {
 			console.log(chalk.green("First sticker in pre-position"));
 
 			while ( job.qtydone < job.qty ){
-			  var start = Date.now();   //stores the start time to know how much it took later
+			  let start = Date.now();   //stores the start time to know how much it took later
+
 				console.log(chalk.cyan("\tProcessing sticker " + (job.qtydone+1) + "/" + job.qty)); //infos the user of the progress made
 
-				var url = await apiTictapper.qrGun.getUrl();  //gets the url
+				let url = await apiTictapper.qrGun.getUrl();  //gets the url
 
 				//var nfcWr = await apiDevice.nfcWrite(url);  //writes the url
 				try{
