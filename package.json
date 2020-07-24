@@ -27,7 +27,8 @@
     "readline-sync": "^1.4.9",
     "replaceall": "^0.1.6",
     "request": "^2.88.0",
-    "serialport": "^9.0.0"
+    "serialport": "^9.0.0",
+    "log-update": "^4.0.0"
   },
   "repository": {
     "type": "git",
