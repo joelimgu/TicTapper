@@ -30,7 +30,7 @@ async function insertTagToDB(job, start, nfcWr, url){
 		uid: nfcWr.tagID,
 		status: "Success",
 		timespent: speed,
-		timeToDetect: tagID.timeToDetect,
+		timeToDetect: nfcWr.timeToDetect,
 		timeToIdentify: nfcWr.timeToIdentify,
 		timeToRead: nfcWr.nfcWr,
 		timeToWrite: nfcWr.timeToWrite,
