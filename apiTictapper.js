@@ -18,11 +18,10 @@ var apiTictapper = {
 
 
 //++++++++++++++++++++++++++++++INSERT TAG TO DB+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-function createTagObj(job, start, nfcWr){
+function createTagObj(job, nfcWr, speed, left){
   let deferred = Q.defer();
 
-	var speed = (Date.now()-start);
-	var left = job.qty - job.qtydone;
+
 
 	var tagObj = {
 		job_id: job.id,
@@ -115,7 +114,10 @@ const mainLoop = async function() {
 						job.status = "stop";
 					};
 
-          let tagObj = await createTagObj(job, start, nfcWr);  //stores the tag in the db
+					var speed = (Date.now()-start);
+					var left = job.qty - job.qtydone;
+
+          let tagObj = await createTagObj(job, nfcWr, speed, left);  //stores the tag in the db
 
 					await Promise.all([database.insertTag(tagObj), database.updateJobQty(job)]).then((msg) => {deferred.resolve(job)}).catch((err) => {throw err});
 
