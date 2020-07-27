@@ -13,7 +13,7 @@
     "clear": "^0.1.0",
     "delay": "^4.1.0",
     "http": "0.0.0",
-    "jpeg-js": "^0.3.4",
+    "jpeg-js": "^0.4.1",
     "jsqr": "^1.1.1",
     "linux-input-device": "^2.0.0",
     "lodash": "^4.17.11",
