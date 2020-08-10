@@ -2,12 +2,23 @@ var Q = require("q");
 const chalk = require('chalk');
 var setup = require('./setup');
 var _ = require('lodash');
-var apiQRGun = require("./apiQRGun.js");
 var DDBB = require("./DDBB.js");
 var Database = require("./DatabaseClass");
 var Arduino = require ("./ArduinoClass")
 const delay = require('delay');
 const logUpdate = require('log-update');
+var apiQRGun = require("./apiQRGun.js");
+
+var machine = { // creates an object to be passed onto the http conection to send data to the Angular page
+    status: "off",
+    databaseConnected : false,
+    arduinoConnected : false,
+    lastJobDone : undefined,
+    currentJob : undefined,
+		error : undefined
+  }
+
+
 
 const frames = ['-', '\\', '|', '/']; // used to create the loading animation in the looking for active job
 var database
@@ -15,6 +26,7 @@ var arduino
 var apiTictapper = {
 	qrGun: new apiQRGun()
 };
+
 
 
 function loadingAnimationForCearchingJobs(i){//animates the porcess of searching an active job in the database
@@ -57,6 +69,7 @@ function setRom(job){ //sets the rom of the arduino
 //++++++++++++++++++++++++++INIT++++++++++++++++++++++++//
 const initialize = async function(){
   let deferred = Q.defer();
+	machine.status = "Initializing..."
   try {//easier to use try catch with the awaits
     database = await new Database(setup.sql.database, "jobs", "tags");//created the db object to interact with the db
 		arduino = await new Arduino(); // creates the arduino object
@@ -64,6 +77,8 @@ const initialize = async function(){
     await Promise.all([arduino.connect(arduinoSetup.port, arduinoSetup.bauds), database.connect(setup.sql)]).then((msg) => { //connects to the database and creates the connections to the arduino
           console.log(chalk.green("-> Arduino " + msg[0]));
           console.log(chalk.green("-> Database " + msg[1]));
+					machine.databaseConnected = true;
+					machine.arduinoConnected = true;
     });
 
     await Promise.all([database.runQuery(DDBB.DEFAULT_JOBS_TABLE),database.runQuery(DDBB.DEFAULT_TAGS_TABLE)]);//ensures that the tables exist and if not creates them
@@ -72,6 +87,7 @@ const initialize = async function(){
 
   }catch(err){
     console.log(chalk.red(err));
+		machine.error = err
   }
   return deferred.promise;
 };
@@ -84,7 +100,7 @@ const mainLoop = async function() {
 	let N = 0;
 	while(true){	//En principi no ha de sortir mai d'aquí
 
-
+		machine.status = "Looking for a Job"
 		N++;
 		loadingAnimationForCearchingJobs(N);
 
@@ -95,6 +111,7 @@ const mainLoop = async function() {
 		if (!_.isEmpty(job)){                   //if ther's a job:
 			console.log(chalk.blue("Found: " + job));
 			console.log(chalk.green("Found active job:" + job.ref + " " + job.name + " " + job.qtydone + "/" + job.qty));
+			machine.status = ("Found a Job: " + job.ref)
 
       setRom(job);//says to the arduino if it has to rom or not
 
@@ -102,17 +119,22 @@ const mainLoop = async function() {
 			//console.log(chalk.green("Put the first sticker in the NFC pad and scan the qr code to continue"));
 
 			while ( job.qtydone < job.qty ){
+				machine.currentJob = job;
+
 			  let start = Date.now();   //stores the start time to know how much it took later
 				console.log(chalk.cyan.bold("Put the first sticker in the NFC pad and scan the qr code to continue"));
 				console.log(chalk.cyan("\tProcessing sticker " + (job.qtydone+1) + "/" + job.qty)); //infos the user of the progress made
 
+				machine.status = "Waiting for the URL from QR gun "
 				let url = await apiTictapper.qrGun.getUrl();  //gets the url
 
 				//var nfcWr = await apiDevice.nfcWrite(url);  //writes the url
 				try{
+					machine.status = "Whiting the NFC Tag"
 					var nfcWr = await arduino.write(url) //writes the url to the tag and returns a dictionary with all the operation info
 				}catch(err){
 					console.log(chalk.red.bold("an error has accurred while writing the NFC tag: " + err));
+					machine.error = err
 				}
 
         try {
@@ -138,6 +160,7 @@ const mainLoop = async function() {
 
         }catch(err){
             console.log(chalk.red("An error has occured : " + err));
+						machine.error = err
         };
 			}
 		}
@@ -153,4 +176,4 @@ const mainLoop = async function() {
 }
 
 //Export module
-module.exports = {initialize, mainLoop};
+module.exports = {initialize, mainLoop, machine};
