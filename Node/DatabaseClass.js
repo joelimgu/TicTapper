@@ -127,7 +127,7 @@ class Database {                             //class to create a db to CRUD
       + job.status + ","
       + Date.now()
       + ");"
-    this.runQuery(query).then((res) => {deferred.resolve(res)})
+    this.runQuery(query).then((res) => {deferred.resolve(res); console.log("Created Job: " + job.name);})
                         .catch((err) => {throw(err)});
     return deferred.promise;
   }

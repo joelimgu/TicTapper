@@ -222,6 +222,7 @@ app.route('/api/updateDB').post((req, res) => {
 app.route('/api/addNewJob').post((req, res) => {
   res.status(201).send(req.body)
   console.log("post req: " + JSON.stringify(req.body));
+  console.log("creatign job...");
   database.insertJob(req.body.newJob);
 })
 
