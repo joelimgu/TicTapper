@@ -179,8 +179,9 @@ const mainLoop = async function() {
 
 //+++++++++++++++++++++++++++Connection with http module+++++++++++++++++
 function getStatus(){
+  console.log("called getStatus");
   return machine.status;
 }
 
 //Export module
-module.exports = {initialize, mainLoop, machine, getStatus};
+module.exports = {initialize, mainLoop, getStatus};
