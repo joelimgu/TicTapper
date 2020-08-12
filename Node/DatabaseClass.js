@@ -1,5 +1,3 @@
-
-
 var Q=require("q");                         //promise handeler
 var mysql = require('mysql');
 var setup=require('./setup');               //Has the conection info for the database and the arduino
@@ -133,8 +131,18 @@ class Database {                             //class to create a db to CRUD
                         .catch((err) => {throw(err)});
     return deferred.promise;
   }
-};
 
+  updateDB(newDB){
+    let deferred = Q.defer();
+    const query= "USE" + newDB + ";"
+    this.runQuery(query).then((res) => {
+      console.log(chalk.green("DB updated to: " + newDB));
+      this.db = newDB;
+      deferred.resolve(res);})
+                        .catch((err) => {throw(err)});
+    return deferred.promise;
+  }
+};
 
 //exports the class to be used in other parts of the program
 module.exports = Database;

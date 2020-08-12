@@ -110,7 +110,7 @@ const mainLoop = async function() {
 
 
 
-    if (database.db != machine.databaseName) await initialize(); // updated the db if requested by the user after finishing a job
+    if (database.db != machine.databaseName) await database.updateDB(machine.databaseName); // updated the db if requested by the user after finishing a job
 
 
 
