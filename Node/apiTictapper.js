@@ -8,6 +8,7 @@ var Arduino = require ("./ArduinoClass")
 const delay = require('delay');
 const logUpdate = require('log-update');
 var apiQRGun = require("./apiQRGun.js");
+const http = require("./httpConnection")
 
 var machine = { // creates an object to be passed onto the http conection to send data to the Angular page
     status: "off",
