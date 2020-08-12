@@ -11,7 +11,7 @@ var apiQRGun = require("./apiQRGun.js");
 
 var machine = { // creates an object to be passed onto the http conection to send data to the Angular page
     status: "off",
-    databaseName:undefined,
+    databaseName: setup.sql.database,
     databaseConnected : false,
     arduinoConnected : false,
     lastJobDone : undefined,
@@ -107,6 +107,11 @@ const mainLoop = async function() {
 
 		var job = await database.getActiveJob();	//Gets the first active job found
     job = job[0]; //gets the job as a dictionary as the raw data is an array of one item but wiht the proises you gave to do it after getting the raw data [{id:1,name:....}] --> {id:1,name:....}
+
+
+
+    if (database.db != machine.databaseName) await initialize(); // updated the db if requested by the user after finishing a job
+
 
 
 		if (!_.isEmpty(job)){                   //if ther's a job:
@@ -211,7 +216,7 @@ app.route('/api/status').get((req, res) => {
 app.route('/api/updateDB').post((req, res) => {
   res.status(201).send(req.body)
   console.log("post req: " + JSON.stringify(req.body));
-  machine.databaseName = "a"
+  machine.databaseName = req.body.newDB
 })
 
 

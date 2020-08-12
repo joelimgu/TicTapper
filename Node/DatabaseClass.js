@@ -114,6 +114,25 @@ class Database {                             //class to create a db to CRUD
                         .catch((err) => {throw(err)});
     return deferred.promise;
   };
+
+
+  insertJob(job){
+    let deferred = Q.defer();
+    if (!job) throw "the job to be inserted is undefined"
+    const query = "INSERT INTO jobs(\`name\`,ref,pre_url,uid_len,qty,qtydone,rom,\`status\`,modified_at) VALUES(
+      + job.name +","
+      + job.ref + ","
+      + job.pre_url + ","
+      + job.qty + ","
+      + job.qtyDone + ","
+      + job.rom + ","
+      + job.status + ","
+      + Date.now()
+      + ");"
+    this.runQuery(query).then((res) => {deferred.resolve(res)})
+                        .catch((err) => {throw(err)});
+    return deferred.promise;
+  }
 };
 
 
