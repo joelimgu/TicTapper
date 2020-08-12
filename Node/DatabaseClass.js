@@ -134,7 +134,7 @@ class Database {                             //class to create a db to CRUD
 
   updateDB(newDB){
     let deferred = Q.defer();
-    const query= "USE" + newDB + ";"
+    const query= "USE " + newDB + ";"
     this.runQuery(query).then((res) => {
       console.log(chalk.green("DB updated to: " + newDB));
       this.db = newDB;
