@@ -16,7 +16,8 @@ var machine = { // creates an object to be passed onto the http conection to sen
     arduinoConnected : false,
     lastJobDone : undefined,
     currentJob : undefined,
-		error : undefined
+		error : undefined,
+    finishedTime: undefined
   }
 
 
@@ -226,9 +227,9 @@ app.route('/api/addNewJob').post((req, res) => {
   database.insertJob(req.body.newJob);
 })
 
-app.route('/api/getcurrentJob').get((req, res) => {
-  res.send(machine.currentJob)
-})
+// app.route('/api/getcurrentJob').get((req, res) => {
+//   res.send(machine.currentJob)
+// })
 
 
 //Export module
