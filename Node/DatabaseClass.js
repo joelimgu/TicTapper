@@ -119,7 +119,7 @@ class Database {                             //class to create a db to CRUD
   insertJob(job){
     let deferred = Q.defer();
     if (!job) throw "the job to be inserted is undefined"
-    const query = "INSERT INTO jobs(\`name\`,ref,pre_url,uid_len,qty,qtydone,rom,\`status\`,modified_at) VALUES(
+    const query = "INSERT INTO jobs(\`name\`,ref,pre_url,uid_len,qty,qtydone,rom,\`status\`,modified_at) VALUES("
       + job.name +","
       + job.ref + ","
       + job.pre_url + ","
