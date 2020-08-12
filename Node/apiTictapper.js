@@ -226,6 +226,10 @@ app.route('/api/addNewJob').post((req, res) => {
   database.insertJob(req.body.newJob);
 })
 
+app.route('/api/getcurrentJob').get((req, res) => {
+  res.send(machine.currentJob)
+})
+
 
 //Export module
 module.exports = {initialize, mainLoop};
