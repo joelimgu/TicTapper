@@ -8,7 +8,13 @@ var machine = {
     currentJob : undefined
   }
 
-machine.status = "on"
+machine.status = "ok"
+
+
+function getStatus(){
+  console.log("called getStatus");
+  return machine.status;
+}
 
 console.log(machine.status);
-module.exports = {machine};
+module.exports = {getStatus};

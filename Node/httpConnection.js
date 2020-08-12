@@ -1,10 +1,10 @@
 const express = require('express')
 const cors = require('cors')
-const app = express()
-const apiTictapper = require('./apiTictapper');
-const main = require('./main');
 const bodyParser = require("body-parser")
-//const todelete2 = require('./todelete2');
+const app = express()
+//const apiTictapper = require('./apiTictapper');
+
+const todelete2 = require('./todelete2');
 
 app.use(bodyParser.json())
 
@@ -21,7 +21,7 @@ app.listen(4300, () => {
 
 //wehn getting the http.localhost:XXXX/api/cats it resturns {msg: "hola"}
 app.route('/api/machine').get((req, res) => {
-  res.send(apiTictapper.getStatus())
+  res.send(todelete2.getStatus())
 })
 
 app.route('/api/test').get((req, res) => {

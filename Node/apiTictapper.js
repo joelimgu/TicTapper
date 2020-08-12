@@ -8,7 +8,6 @@ var Arduino = require ("./ArduinoClass")
 const delay = require('delay');
 const logUpdate = require('log-update');
 var apiQRGun = require("./apiQRGun.js");
-const http = require("./httpConnection")
 
 var machine = { // creates an object to be passed onto the http conection to send data to the Angular page
     status: "off",
@@ -177,11 +176,39 @@ const mainLoop = async function() {
 }
 
 
-//+++++++++++++++++++++++++++Connection with http module+++++++++++++++++
-function getStatus(){
-  console.log("called getStatus");
-  return machine.status;
+//+++++++++++++++++++++++++++HTTP Conection++++++++++++++++++++++++++++++++++++++
+
+const express = require('express')
+const cors = require('cors')
+const bodyParser = require("body-parser")
+const app = express()
+
+app.use(bodyParser.json())
+
+var corsOptions = {
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
+
+app.use(cors(corsOptions))
+
+app.listen(4300, () => {
+  console.log('Node server started!')
+})
+
+app.route('/api/machine').get((req, res) => {
+  res.send(machine)
+})
+
+app.route('/api/test').get((req, res) => {
+  res.send("Node Server Up!")
+})
+
+app.route('/api/status').get((req, res) => {
+  res.send(apiTictapper.machine)
+})
+
+
+
 
 //Export module
 module.exports = {initialize, mainLoop, getStatus};
