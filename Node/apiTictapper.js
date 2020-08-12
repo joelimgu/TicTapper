@@ -152,6 +152,7 @@ const mainLoop = async function() {
 					};
 
 					var speed = (Date.now()-start);
+          machine.finishedTime = speed;
 					var left = job.qty - job.qtydone;
 
           let tagObj = await createTagObj(job, nfcWr, speed);  //saves all the tag info on a dictionary to be used by a query to inser it to th db
