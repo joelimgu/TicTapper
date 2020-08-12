@@ -22,7 +22,7 @@ app.route('/api/machine').get((req, res) => {
   res.send(apiTictapper.machine)
 })
 
-app.route('/api/machine').get((req, res) => {
+app.route('/api/test').get((req, res) => {
   res.send("Nose Server Up!")
 })
 
