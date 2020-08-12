@@ -176,5 +176,6 @@ const mainLoop = async function() {
 	return deferred.promise;
 }
 
+console.log(machine.status);
 //Export module
 module.exports = {initialize, mainLoop, machine};
