@@ -176,6 +176,11 @@ const mainLoop = async function() {
 	return deferred.promise;
 }
 
-console.log(machine.status);
+
+//+++++++++++++++++++++++++++Connection with http module+++++++++++++++++
+function getStatus(){
+  return machine.status;
+}
+
 //Export module
 module.exports = {initialize, mainLoop, machine};

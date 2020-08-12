@@ -4,8 +4,10 @@ const app = express()
 const apiTictapper = require('./apiTictapper');
 const main = require('./main');
 const bodyParser = require("body-parser")
+//const todelete2 = require('./todelete2');
 
 app.use(bodyParser.json())
+
 
 var corsOptions = {
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
@@ -19,7 +21,7 @@ app.listen(4300, () => {
 
 //wehn getting the http.localhost:XXXX/api/cats it resturns {msg: "hola"}
 app.route('/api/machine').get((req, res) => {
-  res.send(apiTictapper.machine)
+  res.send(apiTictapper.getStatus())
 })
 
 app.route('/api/test').get((req, res) => {
