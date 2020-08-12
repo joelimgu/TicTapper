@@ -115,7 +115,7 @@ const mainLoop = async function() {
 
 
 		if (!_.isEmpty(job)){                   //if ther's a job:
-			console.log(chalk.blue("Found: " + job));
+			console.log(chalk.blue("Found: " + job.name));
 			console.log(chalk.green("Found active job:" + job.ref + " " + job.name + " " + job.qtydone + "/" + job.qty));
 			machine.status = ("Found a Job: " + job.ref)
 
@@ -136,7 +136,7 @@ const mainLoop = async function() {
 
 				//var nfcWr = await apiDevice.nfcWrite(url);  //writes the url
 				try{
-					machine.status = "Whiting the NFC Tag"
+					machine.status = "Writing the NFC Tag"
 					var nfcWr = await arduino.write(url) //writes the url to the tag and returns a dictionary with all the operation info
 				}catch(err){
 					console.log(chalk.red.bold("an error has accurred while writing the NFC tag: " + err));
