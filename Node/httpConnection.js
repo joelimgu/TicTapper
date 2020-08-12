@@ -22,6 +22,10 @@ app.route('/api/machine').get((req, res) => {
   res.send(apiTictapper.machine)
 })
 
+app.route('/api/machine').get((req, res) => {
+  res.send("Nose Server Up!")
+})
+
 app.route('/api/status').get((req, res) => {
   res.send({status: "Everything is Fine"})
 })
