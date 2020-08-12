@@ -219,8 +219,11 @@ app.route('/api/updateDB').post((req, res) => {
   machine.databaseName = req.body.newDB
 })
 
-
-
+app.route('/api/addNewJob').post((req, res) => {
+  res.status(201).send(req.body)
+  console.log("post req: " + JSON.stringify(req.body));
+  database.insertJob(req.body.newJob);
+})
 
 
 //Export module
