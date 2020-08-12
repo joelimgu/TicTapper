@@ -23,7 +23,7 @@ app.route('/api/machine').get((req, res) => {
 })
 
 app.route('/api/test').get((req, res) => {
-  res.send("Nose Server Up!")
+  res.send("Node Server Up!")
 })
 
 app.route('/api/status').get((req, res) => {
@@ -49,6 +49,7 @@ app.route('/api/cats/:name').delete((req, res) => {
   console.log("delete");
 })
 
+console.log(apiTictapper.machine.status);
 
 //https://malcoded.com/posts/angular-backend-express/
 //https://medium.com/bb-tutorials-and-thoughts/how-to-develop-and-build-angular-app-with-nodejs-e24c40444421
