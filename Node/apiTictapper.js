@@ -183,4 +183,4 @@ function getStatus(){
 }
 
 //Export module
-module.exports = {initialize, mainLoop, machine};
+module.exports = {initialize, mainLoop, machine, getStatus};
