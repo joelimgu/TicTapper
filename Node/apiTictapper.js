@@ -204,11 +204,11 @@ app.route('/api/test').get((req, res) => {
 })
 
 app.route('/api/status').get((req, res) => {
-  res.send(apiTictapper.machine)
+  res.send(machine.status)
 })
 
 
 
 
 //Export module
-module.exports = {initialize, mainLoop, getStatus};
+module.exports = {initialize, mainLoop};
