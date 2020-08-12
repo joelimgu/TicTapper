@@ -10,16 +10,17 @@ const job = {
 };
 
 
-const query = "INSERT INTO jobs(\`name\`,ref,pre_url,uid_len,qty,qtydone,rom,\`status\`,modified_at) VALUES("
-  + job.name +","
-  + job.ref + ","
-  + job.pre_url + ","
+const query = "INSERT INTO jobs(`name`,ref,pre_url,uid_len,qty,qtydone,rom,`status`,modified_at)"
+  + "VALUES('"
+  + job.name + "',"
+  + "'" + job.ref + "',"
+  + "'" + job.pre_url + "',"
+  + 0 +","
   + job.qty + ","
   + job.qtyDone + ","
   + job.rom + ","
-  + job.status + ","
-  + Date.now()
-  + ");"
+  + "'" + job.status + "'" + ","
+  + Date.now() + ")";
 
 
 console.log(query);
