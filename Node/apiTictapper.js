@@ -11,6 +11,7 @@ var apiQRGun = require("./apiQRGun.js");
 
 var machine = { // creates an object to be passed onto the http conection to send data to the Angular page
     status: "off",
+    databaseName:undefined,
     databaseConnected : false,
     arduinoConnected : false,
     lastJobDone : undefined,
@@ -206,6 +207,13 @@ app.route('/api/test').get((req, res) => {
 app.route('/api/status').get((req, res) => {
   res.send(machine.status)
 })
+
+app.route('/api/updateDB').post((req, res) => {
+  res.status(201).send(req.body)
+  console.log("post req: " + JSON.stringify(req.body));
+  machine.databaseName = "a"
+})
+
 
 
 
