@@ -144,6 +144,17 @@ class Database {                             //class to create a db to CRUD
                         .catch((err) => {throw(err)});
     return deferred.promise;
   }
+
+  getLastEditedJob(){
+    let deferred = Q.defer();
+    const query= "SELECT MAX(modified_at) FROM jobs;";
+    this.runQuery(query).then((res) => {
+      this.db = newDB;
+      deferred.resolve(res);})
+                        .catch((err) => {throw(err)});
+    return deferred.promise;
+  }
+  }
 };
 
 //exports the class to be used in other parts of the program
