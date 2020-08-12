@@ -3,7 +3,7 @@ const cors = require('cors')
 const app = express()
 const apiTictapper = require('./apiTictapper');
 const main = require('./main');
-
+const bodyParser = require("body-parser")
 
 app.use(bodyParser.json())
 
