@@ -27,7 +27,7 @@ app.route('/api/test').get((req, res) => {
 })
 
 app.route('/api/status').get((req, res) => {
-  res.send({status: "Everything is Fine"})
+  res.send(apiTictapper.machine)
 })
 //when this.http.post<any>('http://localhost:8080/api/cats', {title: 'posts test'}).subscribe(data =>{console.log(data);})
 //the msg is in the req.body and with res you can send a response
