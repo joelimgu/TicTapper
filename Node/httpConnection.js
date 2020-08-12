@@ -28,7 +28,7 @@ app.route('/api/status').get((req, res) => {
 //when this.http.post<any>('http://localhost:8080/api/cats', {title: 'posts test'}).subscribe(data =>{console.log(data);})
 //the msg is in the req.body and with res you can send a response
 //post is for creating a new server side object
-app.route('/api/cats').post((req, res) => {
+app.route('/api/createJob').post((req, res) => {
   res.status(201).send(req.body)
   console.log("post req: " + JSON.stringify(req.body));
 })
