@@ -230,7 +230,6 @@ app.route('/api/addNewJob').post((req, res) => {
 
 app.route('/api/getLastEditedJob').get((req, res) => {//returs the last edited job to be displayed
   let lastJob = database.getLastEditedJob();
-  lastJob = lastJob[0];
   console.log(lastJob);
   res.send({lastJob: lastJob})
 })
