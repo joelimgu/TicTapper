@@ -154,7 +154,6 @@ class Database {                             //class to create a db to CRUD
                         .catch((err) => {throw(err)});
     return deferred.promise;
   }
-  }
 };
 
 //exports the class to be used in other parts of the program
