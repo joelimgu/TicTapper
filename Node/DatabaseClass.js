@@ -149,7 +149,6 @@ class Database {                             //class to create a db to CRUD
     let deferred = Q.defer();
     const query= "SELECT MAX(modified_at) FROM jobs;";
     this.runQuery(query).then((res) => {
-      this.db = newDB;
       deferred.resolve(res);})
                         .catch((err) => {throw(err)});
     return deferred.promise;
