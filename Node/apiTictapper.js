@@ -229,6 +229,7 @@ app.route('/api/addNewJob').post((req, res) => {
 })
 
 app.route('/api/getLastEditedJob').get(async (req, res) => {//returs the last edited job to be displayed
+  console.log("looking for last job");
   let lastJob = await database.getLastEditedJob();
   console.log(lastJob);
   res.send({lastJob: lastJob})
