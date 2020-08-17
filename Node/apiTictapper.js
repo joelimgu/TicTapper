@@ -145,7 +145,7 @@ const mainLoop = async function() {
 					console.log(chalk.red.bold("an error has accurred while writing the NFC tag: " + err));
 					machine.error = err
 				}
-
+        console.log("hre");
         try {
 					job.qtydone++;
 
