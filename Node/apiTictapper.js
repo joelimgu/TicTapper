@@ -192,12 +192,12 @@ const mainLoop = async function() {
 
           }catch(err){
               console.log(chalk.red("An error has occured : " + err));
-              machine.error = "An error occurred while saving the tag to DB, it has't been done, if roamed it can be discarted"
-
+              machine.error = "An error occurred while saving the tag to DB, it has't been done, if roamed it can be discarted, if not try again"
+              await RecieveAngularOrder();
           };
         } else{
           machine.status = "Didnt save the tag to db, continuing the program"
-          await RecieveAngularOrder();
+
         }
 			}
 		}
