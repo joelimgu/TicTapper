@@ -137,39 +137,44 @@ const mainLoop = async function() {
 				let url = await apiTictapper.qrGun.getUrl();  //gets the url
 
 				//var nfcWr = await apiDevice.nfcWrite(url);  //writes the url
+				try{
+					machine.status = "Writing the NFC Tag"
+          console.log("Writing the NFC Tag");
+					var nfcWr = await arduino.write(url) //writes the url to the tag and returns a dictionary with all the operation info
 
-			machine.status = "Writing the NFC Tag"
-      console.log("Writing the NFC Tag");
-			var nfcWr = await arduino.write(url) //writes the url to the tag and returns a dictionary with all the operation info
+          try {
+            job.qtydone++;
 
+            if (job.qtydone == job.qty){
+              job.status = "stop";
+            };
 
+            var speed = (Date.now()-start);
+            machine.finishedTime = speed;
+            var left = job.qty - job.qtydone;
 
-        try {
-					job.qtydone++;
+            let tagObj = await createTagObj(job, nfcWr, speed);  //saves all the tag info on a dictionary to be used by a query to inser it to th db
 
-					if (job.qtydone == job.qty){
-						job.status = "stop";
-					};
+            //saves the tag into th db and updates the active job
+            await Promise.all([database.insertTag(tagObj), database.updateJobQty(job)]).then((msg) => {deferred.resolve(job)}).catch((err) => {throw err});
 
-					var speed = (Date.now()-start);
-          machine.finishedTime = speed;
-					var left = job.qty - job.qtydone;
+            console.log("\t" + chalk.green("-> Success. Speed: " + speed + " ms. Finishing job in " + ((speed*left)/1000) + " seconds."));
 
-          let tagObj = await createTagObj(job, nfcWr, speed);  //saves all the tag info on a dictionary to be used by a query to inser it to th db
+            if (job.status == "stop"){ //infos the user that the job has been finished ( should add a log aftes the while to inform the end)
+              console.log(chalk.green("Job " + job.name + " Finished."));
+            };
 
-					//saves the tag into th db and updates the active job
-					await Promise.all([database.insertTag(tagObj), database.updateJobQty(job)]).then((msg) => {deferred.resolve(job)}).catch((err) => {throw err});
-
-				  console.log("\t" + chalk.green("-> Success. Speed: " + speed + " ms. Finishing job in " + ((speed*left)/1000) + " seconds."));
-
-					if (job.status == "stop"){ //infos the user that the job has been finished ( should add a log aftes the while to inform the end)
-						console.log(chalk.green("Job " + job.name + " Finished."));
-					};
+          }catch(err){
+              console.log(chalk.red("An error has occured : " + err));
+              machine.error = err
+          };
 
         }catch(err){
-            console.log(chalk.red("An error has occured : " + err));
-						machine.error = err
-        };
+					console.log(chalk.red.bold("an error has accurred while writing the NFC tag: " + err));
+					machine.error = err
+				}
+
+
 			}
 		}
 		//2- While job active:
