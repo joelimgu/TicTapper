@@ -41,6 +41,7 @@ async function RecieveAngularOrder(){
       loadingAnimationForCearchingJobs(i, "Waiting for an order")
     }
     machine.error = undefined
+    machine.order = undefined
     deferred.resolve();
     return deferred.promise;
 }
