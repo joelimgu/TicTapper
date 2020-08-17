@@ -65,15 +65,15 @@ void writeURLToTag(){ //function called when a URL is passed through the USB to 
       }else{
         response = response + "RE**";                 //Prepare response string RE => Read Error
         operationType = "RE";
-        Serial.println("Read Error");
+        Serial.println("Read Error (2)");
       }
     }else{
       endOfWrite = millis();
       response = response + "WE**";                 //Prepare response string WE => Write Error
       operationType = "WE";
-      Serial.println("Write Error");
+      Serial.println("Write Error (2)");
     }
-
+    
     timeToWrite = endOfWrite - start;
     /* TODO: ADD timing params: Time to identify, Time to Write, Time to Read, Try to get more info about the chip */
     response = response + timeToDetect + "**";                 //Prepare response Time to Read tag in miliseconds
@@ -159,7 +159,7 @@ void romTag() {
   nfc.ROM();
 }
 
-void writeURL(){
+void writeURL(){  
     timeToDetect = 0;
     timeToIdentify = 0;
     timeToRead = 0;
@@ -179,12 +179,12 @@ void writeURL(){
         }
       }else{
         response = response + "RE**";                 //Prepare response string RE => Read Error
-        Serial.println("Read Error (2)");
+        Serial.println("Read Error");
       }
     }else{
       endOfWrite = millis();
       response = response + "WE**";                 //Prepare response string WE => Write Error
-      Serial.println("Write Error (2)");
+      Serial.println("Write Error");
     }
     timeToWrite = endOfWrite - start;
     /* TODO: ADD timing params: Time to identify, Time to Write, Time to Read, Try to get more info about the chip */
@@ -193,9 +193,8 @@ void writeURL(){
     response = response + timeToIdentify + "**";                 //Prepare response Time to Read tag in miliseconds
     response = response + timeToRead + "**";                 //Prepare response Time to Read tag in miliseconds
     response = response + timeToWrite + "**";                 //Prepare response Time to write tag in miliseconds
-    //Serial.println(response + "***");
+    //Serial.println(response + "***");*/
 }
-
 void setup(){
   nfc.begin();//Start NFC as SPI mode
   delay(250);
@@ -205,18 +204,19 @@ void setup(){
   //Serial.println("Arduino:nfc:Ready:*****");
   //Serial.println(" ");
   sendJSON();
+}
  /*
   //JSON OBJECT CREATION
   const size_t capacity = JSON_OBJECT_SIZE(6);
   StaticJsonDocument <512> doc;
-
+  
   doc["tagID"] = "22aaee3344ff";
   doc["operationType"] = "RO";
   doc["timeToDetect"] = 122;
   doc["timeToIdentify"] = 211;
   doc["timeToRead"] = 432;
   doc["timeToWrite"] = 223;
-
+  
   serializeJson(doc, Serial);
   Serial.println();
   doc["tagID"] = "aaaaaaaaaaa";
@@ -229,12 +229,11 @@ void setup(){
   doc.clear();
   serializeJson(doc, Serial);
   */
-};
 
 void sendJSON(){
   //JSON OBJECT CREATION
   StaticJsonDocument <512> doc; //creates the JSON file using theArduinoJson libary
-
+  
   doc["command"] = command;
   doc["tagID"] = tagId;
   doc["romIt"] = romIt;
@@ -251,7 +250,7 @@ void loop(){
   command = "";
   if(Serial.available()) {               //If serial port is available
       command = Serial.readString();
-      if (command.indexOf("https")>=0){        //Write the tag
+      if (command.indexOf("https")>=0){        //Write the tag  
         writeURLToTag();
       }
       if (command == "D"){   //UnSet ROM -> NO tanquis les etiquetes
