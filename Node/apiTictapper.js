@@ -137,11 +137,11 @@ const mainLoop = async function() {
 				let url = await apiTictapper.qrGun.getUrl();  //gets the url
 
 				//var nfcWr = await apiDevice.nfcWrite(url);  //writes the url
-				try{
-					machine.status = "Writing the NFC Tag"
-          console.log("Writing the NFC Tag");
-					var nfcWr = await arduino.write(url) //writes the url to the tag and returns a dictionary with all the operation info
-				}
+
+			machine.status = "Writing the NFC Tag"
+      console.log("Writing the NFC Tag");
+			var nfcWr = await arduino.write(url) //writes the url to the tag and returns a dictionary with all the operation info
+
 
 
         try {
