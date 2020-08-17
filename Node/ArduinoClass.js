@@ -60,9 +60,11 @@ class Arduino {
     let deferred = Q.defer();
     this.port.write(msg);
     this.parser.once('data',function(){
-      if (this.data.indexOf("Error") <= 0) throw this.data
-      if (this.data.command == msg) deferred.resolve(this.data);
-      else throw "The recieved data from the arduino dosen't correspond with the message send";
+      //if (this.data.indexOf("Error") <= 0) throw this.data
+      if (this.data.command == msg) {
+        if (this.data.indexOf("Error") <= 0) throw this.data
+        else deferred.resolve(this.data);
+      } else throw "The recieved data from the arduino dosen't correspond with the message send";
     });
     return deferred.promise;
   };
