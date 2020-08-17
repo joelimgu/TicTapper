@@ -172,6 +172,7 @@ const mainLoop = async function() {
         }catch(err){
 					console.log(chalk.red.bold("an error has accurred while writing the NFC tag: " + err));
 					machine.error = err
+          console.log("machine error: " + machine.error);
 				}
 
 
