@@ -65,12 +65,13 @@ void writeURLToTag(){ //function called when a URL is passed through the USB to 
       }else{
         response = response + "RE**";                 //Prepare response string RE => Read Error
         operationType = "RE";
-        //add println
+        Serial.println("Read Error");
       }
     }else{
       endOfWrite = millis();
       response = response + "WE**";                 //Prepare response string WE => Write Error
       operationType = "WE";
+      Serial.println("Write Error");
     }
 
     timeToWrite = endOfWrite - start;
@@ -118,6 +119,7 @@ void readTagId() {
     tagId = tag.getUidString();
   }else{
     tagId = "error";
+    Serial.println("Error while reading the tag ID");
   }
   endIdentify = millis();
   timeToIdentify = endIdentify - start;
@@ -177,10 +179,12 @@ void writeURL(){
         }
       }else{
         response = response + "RE**";                 //Prepare response string RE => Read Error
+        Serial.println("Read Error (2)");
       }
     }else{
       endOfWrite = millis();
       response = response + "WE**";                 //Prepare response string WE => Write Error
+      Serial.println("Write Error (2)");
     }
     timeToWrite = endOfWrite - start;
     /* TODO: ADD timing params: Time to identify, Time to Write, Time to Read, Try to get more info about the chip */

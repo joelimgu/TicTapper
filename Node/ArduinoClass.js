@@ -48,7 +48,7 @@ class Arduino {
         var json = JSON.parse(msg); //transforms the msg to a dictionary for easier treatement
         this.data = json;
       }catch(err){
-        console.log("Arduino didns send a JSON, insted send : '" + msg +"' ");
+        throw "Arduino did not send a JSON, insted send : '" + msg +"' ";
         this.data = "";
       };
     });
