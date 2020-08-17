@@ -50,6 +50,7 @@ class Arduino {
       }catch(err){
         //throw "Arduino did not send a JSON, insted send : '" + msg +"' ";
         this.data = "Error"  + "Arduino did not send a JSON, insted send : '" + msg +"' ";
+        this.isThereAnError = true;
       };
     });
 
@@ -58,11 +59,12 @@ class Arduino {
 
   write(msg){ //writes a msg to the arduino and waits for its response wo assure the communications is completed succsesfully;
     let deferred = Q.defer();
+    this.isThereAnError = false
     this.port.write(msg);
     this.parser.once('data',function(){
       //if (this.data.indexOf("Error") <= 0) throw this.data
       if (this.data.command == msg) {
-        if (this.data.indexOf("Error") <= 0) throw this.data
+        if (this.isThereAnError) throw this.data
         else deferred.resolve(this.data);
       } else throw "The recieved data from the arduino dosen't correspond with the message send";
     });
