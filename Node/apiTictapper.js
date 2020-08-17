@@ -17,7 +17,8 @@ var machine = { // creates an object to be passed onto the http conection to sen
     lastJobDone : undefined,
     currentJob : undefined,
 		error : undefined,
-    finishedTime: undefined
+    finishedTime: undefined,
+    order: undefined
   }
 
 
@@ -29,6 +30,17 @@ var apiTictapper = {
 	qrGun: new apiQRGun()
 };
 
+
+async function RecieveAngularOrder(){
+    let deferred = Q.defer();
+    let actualOrder = machine.order;
+    while (actualOrder == machine.order) {
+      await delay(100);
+    }
+    machine.error = undefined
+    deferred.resolve(tagObj);
+    return deferred.promise;
+}
 
 
 function loadingAnimationForCearchingJobs(i){//animates the porcess of searching an active job in the database
@@ -142,6 +154,15 @@ const mainLoop = async function() {
           console.log("Writing the NFC Tag");
 					var nfcWr = await arduino.write(url) //writes the url to the tag and returns a dictionary with all the operation info
 
+
+
+        }catch(err){
+					console.log(chalk.red.bold("an error has accurred while writing the NFC tag: " + err));
+					machine.error = err
+          await RecieveAngularOrder();
+				}
+
+        if (machine.order == "Save tag"){
           try {
             job.qtydone++;
 
@@ -168,14 +189,10 @@ const mainLoop = async function() {
               console.log(chalk.red("An error has occured : " + err));
               machine.error = err
           };
-
-        }catch(err){
-					console.log(chalk.red.bold("an error has accurred while writing the NFC tag: " + err));
-					machine.error = err
-          console.log("machine error: " + machine.error);
-				}
-
-
+        } else{
+          machine.status = "Didnt save the tag to db, continuing the program"
+          delay(500)
+        }
 			}
 		}
 		//2- While job active:
@@ -234,10 +251,19 @@ app.route('/api/addNewJob').post((req, res) => {
   database.insertJob(req.body.newJob);
 })
 
+
 app.route('/api/getLastEditedJob').get(async (req, res) => {//returs the last edited job to be displayed
   let lastJob = await database.getLastEditedJob();
   res.send({lastJob: lastJob})
 })
+
+
+app.route('/api/order').post((req, res) => {
+  res.status(201).send(req.body)
+  console.log("post req: " + JSON.stringify(req.body));
+  machine.order = req.body.order;
+})
+
 
 // app.route('/api/getcurrentJob').get((req, res) => {
 //   res.send(machine.currentJob)
