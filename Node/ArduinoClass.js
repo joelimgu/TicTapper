@@ -48,8 +48,8 @@ class Arduino {
         var json = JSON.parse(msg); //transforms the msg to a dictionary for easier treatement
         this.data = json;
       }catch(err){
-        throw "Arduino did not send a JSON, insted send : '" + msg +"' ";
-        this.data = "";
+        //throw "Arduino did not send a JSON, insted send : '" + msg +"' ";
+        this.data = "Error"  + "Arduino did not send a JSON, insted send : '" + msg +"' ";
       };
     });
 
@@ -60,6 +60,7 @@ class Arduino {
     let deferred = Q.defer();
     this.port.write(msg);
     this.parser.once('data',function(){
+      if (this.data.indexOf("Error") <= 0) throw this.data
       if (this.data.command == msg) deferred.resolve(this.data);
       else throw "The recieved data from the arduino dosen't correspond with the message send";
     });
