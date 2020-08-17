@@ -38,7 +38,7 @@ async function RecieveAngularOrder(){
     while (actualOrder == machine.order) {
       await delay(100);
       i ++;
-      loadingAnimationForCearchingJobs(i)
+      loadingAnimationForCearchingJobs(i, "Waiting for an order")
     }
     machine.error = undefined
     deferred.resolve();
@@ -191,11 +191,12 @@ const mainLoop = async function() {
 
           }catch(err){
               console.log(chalk.red("An error has occured : " + err));
-              machine.error = err
+              machine.error = "An error occurred while saving the tag to DB, it has't been done, if roamed it can be discarted"
+
           };
         } else{
           machine.status = "Didnt save the tag to db, continuing the program"
-          delay(500)
+          await RecieveAngularOrder();
         }
 			}
 		}
