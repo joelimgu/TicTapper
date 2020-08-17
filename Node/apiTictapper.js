@@ -38,7 +38,7 @@ async function RecieveAngularOrder(){
       await delay(100);
     }
     machine.error = undefined
-    deferred.resolve(tagObj);
+    deferred.resolve();
     return deferred.promise;
 }
 
@@ -157,12 +157,13 @@ const mainLoop = async function() {
 
 
         }catch(err){
-					console.log(chalk.red.bold("an error has accurred while writing the NFC tag: " + err));
-					machine.error = err
-          await RecieveAngularOrder();
+				console.log(chalk.red.bold("an error has accurred while writing the NFC tag: " + err));
+				machine.error = err
+        await RecieveAngularOrder();
 				}
 
         if (machine.order == "Save tag"){
+          console.log(chalk.cyan("Saving tag ot db"));
           try {
             job.qtydone++;
 
