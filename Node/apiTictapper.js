@@ -139,6 +139,7 @@ const mainLoop = async function() {
 				//var nfcWr = await apiDevice.nfcWrite(url);  //writes the url
 				try{
 					machine.status = "Writing the NFC Tag"
+          console.log("Writing the NFC Tag");
 					var nfcWr = await arduino.write(url) //writes the url to the tag and returns a dictionary with all the operation info
 				}catch(err){
 					console.log(chalk.red.bold("an error has accurred while writing the NFC tag: " + err));

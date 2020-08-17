@@ -1,16 +1,18 @@
 var Q = require("q");
 
-async function a() {
-  //deferred.resolve("a")
-  throw "a"
+async function a(a) {
+  let deferred = Q.defer();
+  deferred.resolve()
+//  throw "a"
   return deferred.promise;
 }
 
 async function b(){
   try {
-  await a();
+    console.log();
+  let a = await a();
   } catch (e) {
-    console.log("b");
+    console.log("b" + e);
   }
 }
 
