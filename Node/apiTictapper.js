@@ -34,8 +34,11 @@ var apiTictapper = {
 async function RecieveAngularOrder(){
     let deferred = Q.defer();
     let actualOrder = machine.order;
+    let i = 1;
     while (actualOrder == machine.order) {
       await delay(100);
+      i ++;
+      loadingAnimationForCearchingJobs(i)
     }
     machine.error = undefined
     deferred.resolve();
@@ -43,9 +46,9 @@ async function RecieveAngularOrder(){
 }
 
 
-function loadingAnimationForCearchingJobs(i){//animates the porcess of searching an active job in the database
+function loadingAnimationForCearchingJobs(i, msg){//animates the porcess of searching an active job in the database
 	frame = frames[i%4]
-  logUpdate(chalk.blue.bold(`Looking for active job (${frame})`));
+  logUpdate(chalk.blue.bold(msg +` (${frame})`));
 }
 
 //++++++++++++++++++++++++++++++INSERT TAG TO DB+++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -117,7 +120,7 @@ const mainLoop = async function() {
 
 		machine.status = "Looking for a Job"
 		N++;
-		loadingAnimationForCearchingJobs(N);
+		loadingAnimationForCearchingJobs(N, "Looking for active job");
 
 		var job = await database.getActiveJob();	//Gets the first active job found
     job = job[0]; //gets the job as a dictionary as the raw data is an array of one item but wiht the proises you gave to do it after getting the raw data [{id:1,name:....}] --> {id:1,name:....}
