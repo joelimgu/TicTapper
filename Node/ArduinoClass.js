@@ -51,6 +51,7 @@ class Arduino {
         //throw "Arduino did not send a JSON, insted send : '" + msg +"' ";
         this.data = "Error"  + "Arduino did not send a JSON, insted send : '" + msg +"' ";
         this.isThereAnError = true;
+        console.log("Didn't send a JSON");
       };
     });
 
