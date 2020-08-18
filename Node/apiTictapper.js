@@ -169,8 +169,7 @@ const mainLoop = async function() {
         await recieveAngularOrder();
 				}
 
-        if (machine.order == "Save tag"){
-          console.log(chalk.cyan("Saving tag ot db"));
+
           try {
             job.qtydone++;
 
@@ -197,9 +196,7 @@ const mainLoop = async function() {
               console.log(chalk.red("An error has occured : " + err));
               machine.error = "An error occurred while saving the tag to DB, it has't been done, if roamed it can be discarted, if not try again"
           };
-        } else{
-          machine.status = "Didnt save the tag to db, continuing the program"
-        }
+
 			}
 		}
 		//2- While job active:
