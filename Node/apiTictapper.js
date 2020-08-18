@@ -18,7 +18,7 @@ var machine = { // creates an object to be passed onto the http conection to sen
     currentJob : undefined,
 		error : undefined,
     finishedTime: undefined,
-    order: undefined
+    order: ""
   }
 
 
@@ -41,7 +41,7 @@ async function recieveAngularOrder(){
       loadingAnimationForCearchingJobs(i, "Waiting for an order")
     }
     machine.error = undefined
-    machine.order = undefined
+    machine.order = ""
     deferred.resolve();
     return deferred.promise;
 }
@@ -160,9 +160,6 @@ const mainLoop = async function() {
 					machine.status = "Writing the NFC Tag"
           console.log("Writing the NFC Tag");
 					var nfcWr = await arduino.write(url) //writes the url to the tag and returns a dictionary with all the operation info
-
-
-
         }catch(err){
 				console.log(chalk.red.bold("an error has accurred while writing the NFC tag: " + err));
 				machine.error = err
@@ -195,6 +192,7 @@ const mainLoop = async function() {
           }catch(err){
               console.log(chalk.red("An error has occured : " + err));
               machine.error = "An error occurred while saving the tag to DB, it has't been done, if roamed it can be discarted, if not try again"
+              await recieveAngularOrder();
           };
 
 			}
