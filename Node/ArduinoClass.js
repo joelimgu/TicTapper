@@ -64,6 +64,7 @@ class Arduino {
     this.port.write(msg);
     this.parser.once('data',function(){
       //if (this.data.indexOf("Error") <= 0) throw this.data
+      console.log(this.data.command);
       if (this.data.command == msg) {
         if (this.isThereAnError) throw this.data
         else deferred.resolve(this.data);
