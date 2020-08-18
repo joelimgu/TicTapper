@@ -31,7 +31,7 @@ var apiTictapper = {
 };
 
 
-async function RecieveAngularOrder(){
+async function recieveAngularOrder(){
     let deferred = Q.defer();
     let actualOrder = machine.order;
     let i = 1;
@@ -79,8 +79,11 @@ function createTagObj(job, nfcWr, speed){
 function setRom(job){ //sets the rom of the arduino
   let rom = "D"; //Don not rom stickers for this job
   if (job.rom == 1)		rom = "C"; //Rom stickers for this job
-	arduino.write(rom).then().catch((err) => {console.log(chalk.red.bold(err));
-                                            machine.error = err;})
+	arduino.write(rom).then().catch(async (err) => {
+                            console.log(chalk.red.bold(err));
+                            machine.error = err;
+                            await recieveAngularOrder();
+                            })
 };
 
 
@@ -163,7 +166,7 @@ const mainLoop = async function() {
         }catch(err){
 				console.log(chalk.red.bold("an error has accurred while writing the NFC tag: " + err));
 				machine.error = err
-        await RecieveAngularOrder();
+        await recieveAngularOrder();
 				}
 
         if (machine.order == "Save tag"){
