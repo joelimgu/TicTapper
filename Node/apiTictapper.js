@@ -168,11 +168,6 @@ const mainLoop = async function() {
 
 
           try {
-            job.qtydone++;
-
-            if (job.qtydone == job.qty){
-              job.status = "stop";
-            };
 
             var speed = (Date.now()-start);
             machine.finishedTime = speed;
@@ -187,6 +182,11 @@ const mainLoop = async function() {
 
             if (job.status == "stop"){ //infos the user that the job has been finished ( should add a log aftes the while to inform the end)
               console.log(chalk.green("Job " + job.name + " Finished."));
+            };
+            job.qtydone++;
+
+            if (job.qtydone == job.qty){
+              job.status = "stop";
             };
 
           }catch(err){
