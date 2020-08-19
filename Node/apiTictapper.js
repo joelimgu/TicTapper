@@ -9,6 +9,8 @@ const delay = require('delay');
 const logUpdate = require('log-update');
 var apiQRGun = require("./apiQRGun.js");
 
+
+
 var machine = { // creates an object to be passed onto the http conection to send data to the Angular page
     status: "off",
     databaseName: setup.sql.database,
@@ -153,13 +155,17 @@ const mainLoop = async function() {
 				console.log(chalk.cyan("\tProcessing sticker " + (job.qtydone+1) + "/" + job.qty)); //infos the user of the progress made
 
 				machine.status = "Waiting for the URL from QR gun "
-				let url = await apiTictapper.qrGun.getUrl();  //gets the url
 
+        let url = await apiTictapper.qrGun.getUrl();  //gets the url
+        let id = url.split("/")
+        let url = job.pre_url + id.slice(-1)
 				//var nfcWr = await apiDevice.nfcWrite(url);  //writes the url
 				try{
 					machine.status = "Writing the NFC Tag"
           console.log("Writing the NFC Tag");
-					var nfcWr = await arduino.write(url) //writes the url to the tag and returns a dictionary with all the operation info
+
+          var nfcWr = await arduino.write(url) //writes the url to the tag and returns a dictionary with all the operation info
+
         }catch(err){
 				console.log(chalk.red.bold("an error has accurred while writing the NFC tag: " + err));
 				machine.error = err
@@ -181,7 +187,7 @@ const mainLoop = async function() {
             if (job.qtydone == job.qty){
               job.status = "stop";
             };
-            
+
             await database.updateJobQty(job).then().catch((err) => {throw err});
             console.log("\t" + chalk.green("-> Success. Speed: " + speed + " ms. Finishing job in " + ((speed*left)/1000) + " seconds."));
 
