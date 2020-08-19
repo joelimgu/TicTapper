@@ -68,7 +68,7 @@ class Arduino {
       if (this.data.command == msg) {
         if (this.isThereAnError) throw this.data
         else deferred.resolve(this.data);
-      } else deferred.reject( "The recieved data from the arduino dosen't correspond with the message send");
+      } else deferred.reject("The recieved data from the arduino dosen't correspond with the message send, insted sent: " + this.data);
     });
     return deferred.promise;
   };
