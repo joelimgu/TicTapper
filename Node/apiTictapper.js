@@ -158,7 +158,7 @@ const mainLoop = async function() {
 
         let url = await apiTictapper.qrGun.getUrl();  //gets the url
         let id = url.split("/")
-        let url = job.pre_url + id.slice(-1)
+        url = job.pre_url + id.slice(-1)
 				//var nfcWr = await apiDevice.nfcWrite(url);  //writes the url
 				try{
 					machine.status = "Writing the NFC Tag"
