@@ -176,18 +176,21 @@ const mainLoop = async function() {
             let tagObj = await createTagObj(job, nfcWr, speed);  //saves all the tag info on a dictionary to be used by a query to inser it to th db
 
             //saves the tag into th db and updates the active job
-            await Promise.all([database.insertTag(tagObj), database.updateJobQty(job)]).then((msg) => {deferred.resolve(job)}).catch((err) => {throw err});
-
+            await database.insertTag(tagObj).then().catch((err) => {throw err});
+            job.qtydone++;
+            if (job.qtydone == job.qty){
+              job.status = "stop";
+            };
+            
+            await database.updateJobQty(job).then().catch((err) => {throw err});
             console.log("\t" + chalk.green("-> Success. Speed: " + speed + " ms. Finishing job in " + ((speed*left)/1000) + " seconds."));
 
             if (job.status == "stop"){ //infos the user that the job has been finished ( should add a log aftes the while to inform the end)
               console.log(chalk.green("Job " + job.name + " Finished."));
             };
-            job.qtydone++;
 
-            if (job.qtydone == job.qty){
-              job.status = "stop";
-            };
+
+
 
           }catch(err){
               console.log(chalk.red("An error has occured : " + err));
